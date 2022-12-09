@@ -1,14 +1,8 @@
-
-name: Python application
+name: Github CI/CD
 
 on:
   push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
-
-permissions:
-  contents: read
+    branches: "main"
 
 jobs:
   build:
