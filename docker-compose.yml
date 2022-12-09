@@ -1,0 +1,35 @@
+version: "3.9"
+services:
+  bot:
+    build: .
+    env_file:
+      .env
+    environment:
+      - DB_HOST=mariadb
+      - REDIS_HOST=redis
+    depends_on:
+      - mariadb
+      - redis
+  mariadb:
+    image:
+      "mariadb:10.6"
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=yes
+      - MYSQL_USER=${DB_USER}
+      - MYSQL_PASSWORD=${DB_PASSWORD}
+      - MYSQL_DATABASE=${DB_NAME}
+
+  redis:
+    image:
+      "redis:7.0-alpine"
+    ports:
+      - "6379:6379"
+  phpmyadmin:
+    image:
+      "phpmyadmin:latest"
+    ports:
+      - "0.0.0.0:8080:80"
+    environment:
+      - PMA_HOST=mariadb

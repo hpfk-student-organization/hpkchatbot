@@ -1,0 +1,9 @@
+*/data/photo/replacements/*
+*/data/photo/replacements_tmp/*
+*/data/schedule/*
+*/logs/*
+venv/
+.env
+.idea/
+__pycache__/
+*.sql
