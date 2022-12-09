@@ -1,10 +1,10 @@
-*/data/photo/replacements/
-*/data/photo/replacements_tmp/
-*/data/photo/time_book/
-*/data/schedule/
-*/logs/
+*/data/photo/replacements/*
+*/data/photo/replacements_tmp/*
+*/data/photo/time_book/*
+*/data/schedule/*
+*/logs/*
 venv/
 .env
 .idea/
-__pycache__/
+**/__pycache__/
 *.sql
