@@ -1,5 +1,5 @@
 FROM python:3.10-alpine
-RUN apk add gcc --no-cache
+RUN apk add make automake gcc g++ subversion python3-dev --no-cache
 WORKDIR /bot
 COPY requirements.txt .
 RUN pip install -r requirements.txt
