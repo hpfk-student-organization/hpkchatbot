@@ -24,7 +24,7 @@ jobs:
 
       run: |
         docker login -u $DOCKER_HUB_LOGIN -p $DOCKER_HUB_PASS docker.io
-        docker build . --file Dockerfile --tag $DOCKER_HUB_LOGIN/$DOCKER_HUB_REPO:$(date + '%Y-%m-%d')          
+        docker build . --file Dockerfile --tag $DOCKER_HUB_LOGIN/$DOCKER_HUB_REPO:$(date +'%Y-%m-%d')          
         docker build . --file Dockerfile --tag $DOCKER_HUB_LOGIN/$DOCKER_HUB_REPO:latest
-        docker push $DOCKER_HUB_LOGIN/$DOCKER_HUB_REPO:$(date + '%Y-%m-%d') 
+        docker push $DOCKER_HUB_LOGIN/$DOCKER_HUB_REPO:$(date +'%Y-%m-%d') 
         docker push $DOCKER_HUB_LOGIN/$DOCKER_HUB_REPO:latest
