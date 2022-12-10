@@ -5,6 +5,4 @@ COPY requirements.txt .
 #RUN pip install -r requirements.txt
 COPY app .
 
-RUN ls -la
-RUN cd /bot/app
 CMD ["python", "__main__.py"]
