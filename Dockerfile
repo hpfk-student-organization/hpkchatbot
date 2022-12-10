@@ -1,5 +1,5 @@
 FROM python:3.10-alpine
-RUN apk add python3-dev
+RUN apk add gcc --no-cache
 WORKDIR /bot
 COPY requirements.txt .
 RUN pip install -r requirements.txt
