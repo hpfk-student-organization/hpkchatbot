@@ -10,26 +10,23 @@ env:
   DOCKER_HUB_REPO: ${{ secrets.DOCKER_HUB_REPO }}
 
 jobs:
-  build:
+  Build-and-push:
 
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v3
-    - name: Set up Python 3.10
-      uses: actions/setup-python@v3
-      with:
-        python-version: "3.10"
 
     - name: Login in DockerHub
       run: docker login -u $DOCKER_HUB_LOGIN -p $DOCKER_HUB_PASS docker.io
 
     - name: Build the Docker image
       run: |
-        docker build . --file Dockerfile --tag $DOCKER_HUB_LOGIN/$DOCKER_HUB_REPO:$(date +'%Y-%m-%d')          
         docker build . --file Dockerfile --tag $DOCKER_HUB_LOGIN/$DOCKER_HUB_REPO:latest
+        docker build . --file Dockerfile --tag $DOCKER_HUB_LOGIN/$DOCKER_HUB_REPO:$(date +'%Y-%m-%d')          
 
     - name: Push the Docker image
       run: |
         docker push $DOCKER_HUB_LOGIN/$DOCKER_HUB_REPO:latest
         docker push $DOCKER_HUB_LOGIN/$DOCKER_HUB_REPO:$(date +'%Y-%m-%d') 
+
