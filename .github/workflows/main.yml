@@ -10,13 +10,12 @@ env:
   DOCKER_HUB_REPO: ${{ secrets.DOCKER_HUB_REPO }}
 
 jobs:
-  Build and push:
+  Build-and-push:
 
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v3
-    - name: Build and push bot
 
     - name: Login in DockerHub
       run: docker login -u $DOCKER_HUB_LOGIN -p $DOCKER_HUB_PASS docker.io
