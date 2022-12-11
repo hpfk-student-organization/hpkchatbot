@@ -1,6 +1,6 @@
 ---
 - name: Install main files
-
+  hosts: "servers"
   tasks:
 
     - name: Install nginx, docker.io, git, vim, net-tools
