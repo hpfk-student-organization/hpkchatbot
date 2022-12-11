@@ -1,10 +1,14 @@
+###############################
+# UPDATE DOCKER IMAGE ON SERVER
+###############################
+
 ---
-- name: Install main files
+- name: install main 
   hosts: "servers"
   become: true # install by super user
   tasks:
 
-    - name: Install nginx, docker.io, git, vim, net-tools
+    - name: Install docker.io
       ansible.builtin.apt:
         name: "{{ item }}"
         state: "latest"
