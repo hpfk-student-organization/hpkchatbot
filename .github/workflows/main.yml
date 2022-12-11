@@ -10,8 +10,7 @@ env:
   DOCKER_HUB_REPO: ${{ secrets.DOCKER_HUB_REPO }}
 
 jobs:
-  Build-and-push:
-
+  build-and-push:
     runs-on: ubuntu-latest
 
     steps:
@@ -30,3 +29,17 @@ jobs:
         docker push $DOCKER_HUB_LOGIN/$DOCKER_HUB_REPO:latest
         docker push $DOCKER_HUB_LOGIN/$DOCKER_HUB_REPO:$(date +'%Y-%m-%d') 
 
+  update:
+    needs: [build-and-push]
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Run playbook
+        uses: dawidd6/action-ansible-playbook@v2
+        with:
+          playbook: ansible/init.yml
+          directory: ./
+          known_hosts: ansible/hosts.ini
+          
