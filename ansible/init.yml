@@ -1,6 +1,7 @@
 ---
-- hosts: servers
+- hosts: server
   become: true
+
   roles:
     - common
     #- update
