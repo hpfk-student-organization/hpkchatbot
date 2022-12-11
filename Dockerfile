@@ -1,5 +1,5 @@
-FROM python:3.10-alpine
-RUN apk add make automake gcc g++ subversion python3-dev --no-cache
+FROM python:3.10-slim
+
 WORKDIR /bot
 COPY requirements.txt .
 RUN pip install -r requirements.txt
