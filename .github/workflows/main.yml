@@ -41,7 +41,7 @@ jobs:
         with:
           playbook: ansible/init.yml
           directory: ./
-          known_hosts: ansible/hosts.ini
+          inventory: ansible/hosts.ini
           options: |
             --extra-vars='ansible_become_pass=${{ secrets.SERVER_PASSWORD }}'
 
