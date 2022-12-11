@@ -1,6 +1,8 @@
-- tasks:
-
-    - name: Install docker.io
+- name: Install main files
+  hosts: "servers"
+  become: true # install by super user
+  tasks:
+    - name: Install nginx, docker.io, git, vim, net-tools
       ansible.builtin.apt:
         name: "{{ item }}"
         state: "latest"
