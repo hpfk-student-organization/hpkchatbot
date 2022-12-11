@@ -1,0 +1,12 @@
+---
+- name: Install main files
+
+  tasks:
+
+    - name: Install nginx, docker.io, git, vim, net-tools
+      ansible.builtin.apt:
+        name: "{{ item }}"
+        state: "latest"
+        update_cache: true
+      with_items:
+        - "docker.io"
