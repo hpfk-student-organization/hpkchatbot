@@ -1,8 +1,3 @@
-###############################
-# UPDATE DOCKER IMAGE ON SERVER
-###############################
-
----
 - name: install main 
   hosts: "servers"
   become: true # install by super user
