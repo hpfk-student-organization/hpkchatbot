@@ -1,7 +1,4 @@
-- name: install main 
-  hosts: "servers"
-  become: true # install by super user
-  tasks:
+- tasks:
 
     - name: Install docker.io
       ansible.builtin.apt:
