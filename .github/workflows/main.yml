@@ -41,7 +41,7 @@ jobs:
         with:
           playbook: ansible/init.yml
           inventory: ansible/hosts.ini
-          user: git
+          user: root
           private_key: ${{ secrets.PRIVATE_KEY }}
         env:
           ANSIBLE_HOST_KEY_CHECKING: 'false'
