@@ -42,7 +42,7 @@ jobs:
           playbook: ansible/init.yml
           inventory: ansible/hosts.ini
           user: root
-          become: root
+          become: true
           private_key: ${{ secrets.PRIVATE_KEY }}
         env:
           ANSIBLE_HOST_KEY_CHECKING: 'false'
