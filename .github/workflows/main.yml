@@ -47,7 +47,7 @@ jobs:
           directory: ./
           known_hosts: .known_hosts
           options: |
+            --inventory ansible/hosts.ini
             --extra-vars='ansible_become_pass=${{ secrets.SERVER_PASSWORD }}'
-            --inventory .hosts
 
           
