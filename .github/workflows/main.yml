@@ -35,14 +35,19 @@ jobs:
     
     steps:
       - uses: actions/checkout@v3
+        
+      - name: Create .known_hosts
+        run: |
+          echo "${{ secrets.SERVER_PASSWORD }}" > .known_hosts
       
       - name: Run playbook
         uses: dawidd6/action-ansible-playbook@v2
         with:
           playbook: ansible/init.yml
           directory: ./
-          known_hosts: ansible/hosts.ini
+          known_hosts: .known_hosts
           options: |
             --extra-vars='ansible_become_pass=${{ secrets.SERVER_PASSWORD }}'
+            --inventory .hosts
 
           
