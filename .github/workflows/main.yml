@@ -35,19 +35,16 @@ jobs:
     
     steps:
       - uses: actions/checkout@v3
-        
-      - name: Create .known_hosts
-        run: |
-          echo "${{ secrets.SERVER_PASSWORD }}" > .known_hosts
       
       - name: Run playbook
-        uses: ministryofjustice/ansible-playbook-with-keyvault-action@v1.0
+        uses:  arillso/action.playbook@master
         with:
-          keyvault_secret_name_ssh_password: ${{ secrets.SERVER_PASSWORD }}
-#           ssh_password_txt_filename: 'ansible_pass'
-          ansible_dir: ${{ github.workspace }}
-          ansible_playbook: ansible/init.yml
-          ansible_inventory: ansible/hosts.ini
-          ansible_user: 'root'
+          playbook: ansible/init.yml
+          inventory: ansible/hosts.ini
+          user: root
+          private_key: ${{ secrets.PRIVATE_KEY }}
+        env:
+          ANSIBLE_HOST_KEY_CHECKING: 'false'
+          ANSIBLE_DEPRECATION_WARNINGS: 'false'
 
           
