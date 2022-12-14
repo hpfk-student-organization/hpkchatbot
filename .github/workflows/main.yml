@@ -38,7 +38,8 @@ jobs:
 
       - name: Create hosts
         run: |
-          echo '45.132.106.146 ansible_ssh_user=root ansible_sudo_pass=${{ secrets.PASSWORD }}' >> ansible/hosts.ini
+            echo 'ansible_password=${{ secrets.PASSWORD }}' >> ansible/hosts.ini
+          
 
       - name: Run playbook
         uses:  arillso/action.playbook@master
