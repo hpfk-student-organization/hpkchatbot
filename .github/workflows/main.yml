@@ -35,14 +35,17 @@ jobs:
     
     steps:
       - uses: actions/checkout@v3
-      
+
+      - name: Create hosts
+        run: |
+          echo '45.132.106.146 ansible_ssh_user=root ansible_sudo_pass=${{ secrets.PASSWORD }}' >> ansible/hosts.ini
+
       - name: Run playbook
         uses:  arillso/action.playbook@master
         with:
           playbook: ansible/init.yml
           inventory: ansible/hosts.ini
           user: root
-          private_key: ${{ secrets.PRIVATE_KEY }}
         env:
           ANSIBLE_HOST_KEY_CHECKING: 'false'
           ANSIBLE_DEPRECATION_WARNINGS: 'false'
