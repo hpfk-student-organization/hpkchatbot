@@ -39,7 +39,7 @@
         bot:
           image:
               "textadi/hpkchatbot:latest"
-          build: .
+#           build: .
           env_file:
             /bot/.env
           environment:
