@@ -53,6 +53,6 @@ jobs:
         env:
           ANSIBLE_HOST_KEY_CHECKING: 'false'
           ANSIBLE_DEPRECATION_WARNINGS: 'false'
-          DOCKER_HUB_LOGIN: $DOCKER_HUB_LOGIN
-          DOCKER_HUB_PASS:  $DOCKER_HUB_PASS
+          DOCKER_HUB_LOGIN: ${{ secrets.DOCKER_HUB_LOGIN }}
+          DOCKER_HUB_PASS:  ${{ secrets.DOCKER_HUB_PASS }}
         
