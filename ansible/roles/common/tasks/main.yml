@@ -7,3 +7,53 @@
   with_items:
     - "docker.io"
 
+- name: Login in DockerHub
+  community.docker.docker_login:
+    username: "{{ docker_hub_login }}"
+    password: "{{ docker_hub_pass }}"
+
+- name: Update project
+  community.docker.docker_compose:
+    project_name: hpkchatbot
+    definition:
+      version: "3.9"
+      services:
+        bot:
+          build: .
+          env_file:
+            .env
+          environment:
+            - DB_HOST=mariadb
+            - REDIS_HOST=redis
+          volumes:
+            - /bot/data:/bot/data
+          depends_on:
+            - mariadb
+            - redis
+        mariadb:
+          image:
+            mariadb:10.6
+          ports:
+            - 3306:3306
+          volumes:
+            - /bot/db:/var/lib/mysql
+
+          environment:
+            - MYSQL_ROOT_PASSWORD=yes
+            - MYSQL_USER=${DB_USER}
+            - MYSQL_PASSWORD=${DB_PASSWORD}
+            - MYSQL_DATABASE=${DB_NAME}
+
+        redis:
+          image:
+            "redis:7.0-alpine"
+          ports:
+            - "6379:6379"
+#        phpmyadmin:
+#          image:
+#            "phpmyadmin:latest"
+#          ports:
+#            - "0.0.0.0:8080:80"
+#          environment:
+#            - PMA_HOST=mariadb
+
