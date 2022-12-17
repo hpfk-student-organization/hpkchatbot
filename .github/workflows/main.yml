@@ -8,7 +8,6 @@ env:
   DOCKER_HUB_LOGIN: ${{ secrets.DOCKER_HUB_LOGIN }}
   DOCKER_HUB_PASS: ${{ secrets.DOCKER_HUB_PASS }}
   DOCKER_HUB_REPO: ${{ secrets.DOCKER_HUB_REPO }}
-  RELEASE: $(date +'%Y-%m-%d') 
 
 jobs:
   build-and-push:
@@ -23,12 +22,12 @@ jobs:
     - name: Build the Docker image
       run: |
         docker build . --file Dockerfile --tag $DOCKER_HUB_LOGIN/$DOCKER_HUB_REPO:latest
-        docker build . --file Dockerfile --tag $DOCKER_HUB_LOGIN/$DOCKER_HUB_REPO:$RELEASE        
+        docker build . --file Dockerfile --tag $DOCKER_HUB_LOGIN/$DOCKER_HUB_REPO:$(date +'%Y-%m-%d')        
 
     - name: Push the Docker image
       run: |
         docker push $DOCKER_HUB_LOGIN/$DOCKER_HUB_REPO:latest
-        docker push $DOCKER_HUB_LOGIN/$DOCKER_HUB_REPO:$RELEASE
+        docker push $DOCKER_HUB_LOGIN/$DOCKER_HUB_REPO:$(date +'%Y-%m-%d') 
 
   update:
     needs: [build-and-push]
@@ -39,10 +38,7 @@ jobs:
 
       - name: Create hosts
         run: |
-
             echo 'ansible_password=${{ secrets.PASSWORD }}' >> ansible/hosts.ini
-          
-
 
       - name: Run playbook
         uses:  arillso/action.playbook@master
