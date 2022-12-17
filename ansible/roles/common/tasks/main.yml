@@ -1,4 +1,7 @@
-- copy: content="{{ env_file }}" dest=./.env
+- name: Copy .env
+  ansible.builtin.copy:
+    content: "{{ env_file }}" 
+    dest: ./.env
 
 - name: Install docker.io
   ansible.builtin.apt:
