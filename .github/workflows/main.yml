@@ -19,6 +19,9 @@ jobs:
     - name: Login in DockerHub
       run: docker login -u $DOCKER_HUB_LOGIN -p $DOCKER_HUB_PASS docker.io
 
+    - name: create env file
+      run: echo '${{ secrets.ENV_FILE }}' > .env
+
     - name: Build the Docker image
       run: |
         docker build . --file Dockerfile --tag $DOCKER_HUB_LOGIN/$DOCKER_HUB_REPO:latest
