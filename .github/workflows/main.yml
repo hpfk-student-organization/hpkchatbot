@@ -50,8 +50,10 @@ jobs:
           extra_vars: |
            - docker_hub_login=${{ secrets.DOCKER_HUB_LOGIN }}
            - docker_hub_pass=${{ secrets.DOCKER_HUB_PASS }}
+           - env_file=${{ secrets.ENV_FILE }} 
         env:
           ANSIBLE_HOST_KEY_CHECKING: 'false'
           ANSIBLE_DEPRECATION_WARNINGS: 'false'
+          
 
         
