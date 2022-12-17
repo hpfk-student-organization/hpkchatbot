@@ -1,3 +1,9 @@
+- name: Create path
+  ansible.builtin.file:
+    path: /bot
+    mode: '0775'
+    state: directory 
+    
 - name: Copy .env
   ansible.builtin.copy:
     content: "{{ env_file }}" 
