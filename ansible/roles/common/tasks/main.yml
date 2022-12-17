@@ -12,9 +12,7 @@
     
 - name: Install docker in python
   ansible.builtin.pip:
-    name: |
-      - docker
-      - docker-compose
+    name: docker, docker-compose
     executable: pip3
 
 - name: Login in DockerHub
