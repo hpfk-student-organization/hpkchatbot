@@ -10,10 +10,10 @@
     - "python3"
     - "python3-pip"
     
-# - name: Install docker in python
-#   ansible.builtin.pip:
-#     name: docker
-#     executable: pip3
+- name: Install docker in python
+  ansible.builtin.pip:
+    name: docker
+    executable: pip3
 
 - name: Login in DockerHub
   community.docker.docker_login:
