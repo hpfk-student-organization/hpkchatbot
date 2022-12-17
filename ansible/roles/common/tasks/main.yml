@@ -1,7 +1,7 @@
 - name: Copy .env
   ansible.builtin.copy:
     content: "{{ env_file }}" 
-    dest: ./.env
+    dest: /bot/.env
 
 - name: Install docker.io
   ansible.builtin.apt:
@@ -35,7 +35,7 @@
               "textadi/hpkchatbot:latest"
           build: .
           env_file:
-            ./.env
+            /bot/.env
           environment:
             - DB_HOST=mariadb
             - REDIS_HOST=redis
