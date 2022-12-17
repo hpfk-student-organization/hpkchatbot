@@ -8,6 +8,8 @@ services:
     environment:
       - DB_HOST=mariadb
       - REDIS_HOST=redis
+    volumes:
+      - ./data:/bot/data
     depends_on:
       - mariadb
       - redis
@@ -16,6 +18,8 @@ services:
       "mariadb:10.6"
     ports:
       - "3306:3306"
+    volumes:
+      - ./db:/var/lib/mysql
     environment:
       - MYSQL_ROOT_PASSWORD=yes
       - MYSQL_USER=${DB_USER}
