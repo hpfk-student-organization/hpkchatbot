@@ -45,6 +45,7 @@ jobs:
         with:
           playbook: ansible/init.yml
           inventory: ansible/hosts.ini
+          galaxy_file: ansible/requirements.ini
           user: root
           extra_vars: |
             docker_hub_login=$DOCKER_HUB_LOGIN
