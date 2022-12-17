@@ -48,8 +48,8 @@ jobs:
           galaxy_file: ansible/requirements.yml
           user: root
           extra_vars: |
-            docker_hub_login=$DOCKER_HUB_LOGIN
-            docker_hub_pass=$DOCKER_HUB_PASS
+            - docker_hub_login: $DOCKER_HUB_LOGIN
+            - docker_hub_pass: $DOCKER_HUB_PASS
         env:
           ANSIBLE_HOST_KEY_CHECKING: 'false'
           ANSIBLE_DEPRECATION_WARNINGS: 'false'
