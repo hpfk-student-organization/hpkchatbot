@@ -8,6 +8,7 @@ env:
   DOCKER_HUB_LOGIN: ${{ secrets.DOCKER_HUB_LOGIN }}
   DOCKER_HUB_PASS: ${{ secrets.DOCKER_HUB_PASS }}
   DOCKER_HUB_REPO: ${{ secrets.DOCKER_HUB_REPO }}
+  RELEASE: $(date +'%Y-%m-%d') 
 
 jobs:
   build-and-push:
@@ -22,12 +23,12 @@ jobs:
     - name: Build the Docker image
       run: |
         docker build . --file Dockerfile --tag $DOCKER_HUB_LOGIN/$DOCKER_HUB_REPO:latest
-        docker build . --file Dockerfile --tag $DOCKER_HUB_LOGIN/$DOCKER_HUB_REPO:$(date +'%Y-%m-%d')          
+        docker build . --file Dockerfile --tag $DOCKER_HUB_LOGIN/$DOCKER_HUB_REPO:$RELEASE        
 
     - name: Push the Docker image
       run: |
         docker push $DOCKER_HUB_LOGIN/$DOCKER_HUB_REPO:latest
-        docker push $DOCKER_HUB_LOGIN/$DOCKER_HUB_REPO:$(date +'%Y-%m-%d') 
+        docker push $DOCKER_HUB_LOGIN/$DOCKER_HUB_REPO:$RELEASE
 
   update:
     needs: [build-and-push]
@@ -43,13 +44,13 @@ jobs:
           
 
 
-      - name: Run playbook
-        uses:  arillso/action.playbook@master
-        with:
-          playbook: ansible/init.yml
-          inventory: ansible/hosts.ini
-          user: root
-        env:
-          ANSIBLE_HOST_KEY_CHECKING: 'false'
-          ANSIBLE_DEPRECATION_WARNINGS: 'false'
+#       - name: Run playbook
+#         uses:  arillso/action.playbook@master
+#         with:
+#           playbook: ansible/init.yml
+#           inventory: ansible/hosts.ini
+#           user: root
+#         env:
+#           ANSIBLE_HOST_KEY_CHECKING: 'false'
+#           ANSIBLE_DEPRECATION_WARNINGS: 'false'
           
