@@ -44,13 +44,13 @@ jobs:
           
 
 
-#       - name: Run playbook
-#         uses:  arillso/action.playbook@master
-#         with:
-#           playbook: ansible/init.yml
-#           inventory: ansible/hosts.ini
-#           user: root
-#         env:
-#           ANSIBLE_HOST_KEY_CHECKING: 'false'
-#           ANSIBLE_DEPRECATION_WARNINGS: 'false'
+      - name: Run playbook
+        uses:  arillso/action.playbook@master
+        with:
+          playbook: ansible/init.yml
+          inventory: ansible/hosts.ini
+          user: root
+        env:
+          ANSIBLE_HOST_KEY_CHECKING: 'false'
+          ANSIBLE_DEPRECATION_WARNINGS: 'false'
           
