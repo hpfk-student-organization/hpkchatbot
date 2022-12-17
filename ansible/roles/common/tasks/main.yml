@@ -7,6 +7,10 @@
   with_items:
     - "docker.io"
 
+- name: Checking
+  ansible.builtin.debug:
+    var: "{{ docker_hub_login }}"
+
 - name: Login in DockerHub
   community.docker.docker_login:
     username: "{{ docker_hub_login }}"
