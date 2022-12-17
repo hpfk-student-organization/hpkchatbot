@@ -6,10 +6,14 @@
     update_cache: true
   with_items:
     - "docker.io"
-
-- name: Checking
-  ansible.builtin.debug:
-    var: "{{ docker_hub_login }}"
+    - "docker"
+    - "python3"
+    - "pip3"
+    
+- name: Install docker in python
+  ansible.builtin.pip:
+    name: docker
+    executable: pip3
 
 - name: Login in DockerHub
   community.docker.docker_login:
