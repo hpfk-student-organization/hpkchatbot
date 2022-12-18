@@ -150,7 +150,7 @@ async def remove_file_in_dir(path_to_dir: Optional[str]) -> Optional[bool]:
     return True
 
 
-async def create_dir(path_to_dir: Optional[str]) -> Optional[bool]:
+def create_dir(path_to_dir: Optional[str]) -> Optional[bool]:
     """
         Remove file in path
 
@@ -164,7 +164,7 @@ async def create_dir(path_to_dir: Optional[str]) -> Optional[bool]:
         logging.debug("Dir exist {}".format(path_to_dir))
         return False
 
-    os.mkdir(path=path_to_dir)
+    os.makedirs(path_to_dir)
     logging.debug("Create dir {}".format(path_to_dir))
 
     return True
@@ -172,8 +172,7 @@ async def create_dir(path_to_dir: Optional[str]) -> Optional[bool]:
 
 def check_and_create_dir(list_of_path: List[str]):
     for path in list_of_path:
-        if not os.path.exists(path):
-            os.mkdir(path)
+        create_dir(path)
     return True
 
 
