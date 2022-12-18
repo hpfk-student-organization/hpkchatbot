@@ -1,0 +1,61 @@
+- name: Create path
+  ansible.builtin.file:
+    path: /bot
+    mode: '0775'
+    state: directory
+
+- name: Copy .env
+  ansible.builtin.copy:
+    content:
+      "
+      API_TOKEN={{ API_TOKEN }}\n
+      WEATHER_TOKEN={{ WEATHER_TOKEN }}\n
+      ID_GROUP_ADMIN={{ ID_GROUP_ADMIN }}\n
+      DB_NAME={{ DB_NAME }}\n
+      DB_USER={{ DB_USER }}\n
+      DB_PASSWORD={{ DB_PASSWORD }}\n
+      "
+    dest: /bot/.env
+
+- name: Login in DockerHub
+  community.docker.docker_login:
+    username: "{{ docker_hub_login }}"
+    password: "{{ docker_hub_pass }}"
+
+- name: Update project
+  community.docker.docker_compose:
+    project_name: hpkchatbot
+    definition:
+      version: "3.9"
+      services:
+        bot:
+          image:
+            textadi/hpkchatbot:latest
+          env_file:
+            /bot/.env
+          #          environment:
+          #            - DB_HOST=mariadb
+          #            - REDIS_HOST=redis
+          volumes:
+            - /bot/data:/bot/data
+            - /bot/logs:/bot/logs
+          depends_on:
+            - mariadb
+            - redis
+        mariadb:
+          image:
+            mariadb:10.6
+          ports:
+            - 127.0.0.1:3306:3306
+          volumes:
+            - /bot/db:/var/lib/mysql
+          environment:
+            - MYSQL_ROOT_PASSWORD=yes
+            - MYSQL_USER={{ DB_USER }}
+            - MYSQL_PASSWORD={{ DB_PASSWORD }}
+            - MYSQL_DATABASE={{ DB_NAME }}
+        redis:
+          image:
+            "redis:7.0-alpine"
+          ports:
+            - 127.0.0.1:6379:6379
