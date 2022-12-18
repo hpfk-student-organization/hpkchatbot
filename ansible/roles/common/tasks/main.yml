@@ -55,6 +55,7 @@
             - REDIS_HOST=redis
           volumes:
             - /bot/data:/bot/data
+            - /bot/logs:/bot/logs
           depends_on:
             - mariadb
             - redis
