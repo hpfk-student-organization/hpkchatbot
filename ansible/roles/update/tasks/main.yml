@@ -58,6 +58,8 @@
             - MYSQL_DATABASE={{ DB_NAME }}
         redis:
           image:
-            "redis:7.0-alpine"
+            redis:7.0-alpine
+          volumes:
+            - /bot/redis:/data
           ports:
             - 6379:6379
