@@ -14,23 +14,23 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-    - name: Login in DockerHub
-      run: docker login -u $DOCKER_HUB_LOGIN -p $DOCKER_HUB_PASS docker.io
+      - name: Login in DockerHub
+        run: docker login -u $DOCKER_HUB_LOGIN -p $DOCKER_HUB_PASS docker.io
 
-    - name: Build the Docker image
-      run: |
-        docker build . --file Dockerfile --tag $DOCKER_HUB_LOGIN/$DOCKER_HUB_REPO:latest
-        docker build . --file Dockerfile --tag $DOCKER_HUB_LOGIN/$DOCKER_HUB_REPO:$(date +'%Y-%m-%d')        
+      - name: Build the Docker image
+        run: |
+          docker build . --file Dockerfile --tag $DOCKER_HUB_LOGIN/$DOCKER_HUB_REPO:latest
+          docker build . --file Dockerfile --tag $DOCKER_HUB_LOGIN/$DOCKER_HUB_REPO:$(date +'%Y-%m-%d')        
 
-    - name: Push the Docker image
-      run: |
-        docker push $DOCKER_HUB_LOGIN/$DOCKER_HUB_REPO:latest
-        docker push $DOCKER_HUB_LOGIN/$DOCKER_HUB_REPO:$(date +'%Y-%m-%d') 
+      - name: Push the Docker image
+        run: |
+          docker push $DOCKER_HUB_LOGIN/$DOCKER_HUB_REPO:latest
+          docker push $DOCKER_HUB_LOGIN/$DOCKER_HUB_REPO:$(date +'%Y-%m-%d') 
 
   update:
-    needs: [build-and-push]
+    needs: [ build-and-push ]
     runs-on: ubuntu-latest
     
     steps:
@@ -38,24 +38,25 @@ jobs:
 
       - name: Create hosts
         run: |
-            echo 'ansible_password=${{ secrets.PASSWORD }}' >> ansible/hosts.ini
+          echo 'ansible_password=${{ secrets.PASSWORD }}' >> ansible/hosts.ini
+          sed -i 's/SERVER_IP/${{ secrets.SERVER_IP }}/' ansible/hosts.ini
 
       - name: Run playbook
-        uses:  arillso/action.playbook@master
+        uses: arillso/action.playbook@master
         with:
           playbook: ansible/init.yml
           inventory: ansible/hosts.ini
           galaxy_file: ansible/requirements.yml
           user: root
           extra_vars: |
-           - docker_hub_login=${{ secrets.DOCKER_HUB_LOGIN }}
-           - docker_hub_pass=${{ secrets.DOCKER_HUB_PASS }}
-           - API_TOKEN=${{ secrets.API_TOKEN }} 
-           - WEATHER_TOKEN=${{ secrets.WEATHER_TOKEN }} 
-           - ID_GROUP_ADMIN=${{ secrets.ID_GROUP_ADMIN }} 
-           - DB_NAME=${{ secrets.DB_NAME }} 
-           - DB_USER=${{ secrets.DB_USER }} 
-           - DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+            - docker_hub_login=${{ secrets.DOCKER_HUB_LOGIN }}
+            - docker_hub_pass=${{ secrets.DOCKER_HUB_PASS }}
+            - API_TOKEN=${{ secrets.API_TOKEN }} 
+            - WEATHER_TOKEN=${{ secrets.WEATHER_TOKEN }} 
+            - ID_GROUP_ADMIN=${{ secrets.ID_GROUP_ADMIN }} 
+            - DB_NAME=${{ secrets.DB_NAME }} 
+            - DB_USER=${{ secrets.DB_USER }} 
+            - DB_PASSWORD=${{ secrets.DB_PASSWORD }}
         env:
           ANSIBLE_HOST_KEY_CHECKING: 'false'
           ANSIBLE_DEPRECATION_WARNINGS: 'false'

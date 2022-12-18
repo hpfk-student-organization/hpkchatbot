@@ -25,6 +25,7 @@
 - name: Update project
   community.docker.docker_compose:
     project_name: hpkchatbot
+    pull: true
     definition:
       version: "3.9"
       services:
