@@ -50,7 +50,6 @@ class CashingSendPhotos:
         # get hash with dir
         get_hash_dir_for_check_original_files_in_dir = get_dir_hash(path_to_dir=dir_path)
 
-        list_messages_of_send = None
         try:
             list_messages_of_send = await self.__send_replacements_for_user(
                 hash_dir=get_hash_dir_for_check_original_files_in_dir, path_to_dir=dir_path)
