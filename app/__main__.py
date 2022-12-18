@@ -1,7 +1,9 @@
 import asyncio
 
 import logging
+import os
 
+import config
 from settings import storage, dp, bot, scheduler
 
 
@@ -19,9 +21,14 @@ async def on_startup():
     """Під час запуску бота"""
     from scheduler.replacements import add_job, jobs_id
     await add_job(jobs_id[0], bot)
-    # scheduler.start()
+    scheduler.start()
     logging.debug('Starting process start to main commands for bots...')
     logging.info('Bot start - OK')
+
+    from utils.tools import check_and_create_dir
+    list_path=[config.PATH_TO_PHOTO_REPLACEMENTS,config.PATH_TO_PHOTO_TIME_BOOK, config.PATH_TO_FILE_SCHEDULE]
+    check_and_create_dir(list_path)
+
 
 
 async def main() -> None:

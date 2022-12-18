@@ -3,7 +3,7 @@ import inspect
 import logging
 import os
 import sys
-from typing import Optional
+from typing import Optional, List
 
 from aiogram.fsm.state import StatesGroup, State
 
@@ -167,6 +167,13 @@ async def create_dir(path_to_dir: Optional[str]) -> Optional[bool]:
     os.mkdir(path=path_to_dir)
     logging.debug("Create dir {}".format(path_to_dir))
 
+    return True
+
+
+def check_and_create_dir(list_of_path: List[str]):
+    for path in list_of_path:
+        if not os.path.exists(path):
+            os.mkdir(path)
     return True
 
 
