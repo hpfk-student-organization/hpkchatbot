@@ -19,9 +19,6 @@ jobs:
     - name: Login in DockerHub
       run: docker login -u $DOCKER_HUB_LOGIN -p $DOCKER_HUB_PASS docker.io
 
-    - name: create env file
-      run: echo '${{ secrets.ENV_FILE }}' > .env
-
     - name: Build the Docker image
       run: |
         docker build . --file Dockerfile --tag $DOCKER_HUB_LOGIN/$DOCKER_HUB_REPO:latest
@@ -53,7 +50,12 @@ jobs:
           extra_vars: |
            - docker_hub_login=${{ secrets.DOCKER_HUB_LOGIN }}
            - docker_hub_pass=${{ secrets.DOCKER_HUB_PASS }}
-           - env_file=${{ secrets.ENV_FILE }} 
+           - API_TOKEN=${{ secrets.API_TOKEN }} 
+           - WEATHER_TOKEN=${{ secrets.WEATHER_TOKEN }} 
+           - ID_GROUP_ADMIN=${{ secrets.ID_GROUP_ADMIN }} 
+           - DB_NAME=${{ secrets.DB_NAME }} 
+           - DB_USER=${{ secrets.DB_USER }} 
+           - DB_PASSWORD=${{ secrets.DB_PASSWORD }}
         env:
           ANSIBLE_HOST_KEY_CHECKING: 'false'
           ANSIBLE_DEPRECATION_WARNINGS: 'false'

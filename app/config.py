@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 # include venv-param
 __NAME_DIR = lambda path: os.path.join(os.path.dirname(__file__), path)
 
-__NAME_VENV_DIR = '../.env'
+__NAME_VENV_DIR = '.env'
 
 dotenv_path = __NAME_DIR(__NAME_VENV_DIR)
 if os.path.exists(dotenv_path):
@@ -14,18 +14,18 @@ if os.path.exists(dotenv_path):
 
 API_TOKEN = os.environ['API_TOKEN']  # Token aiogram bot
 
-DB_NAME = os.environ['DB_NAME']
-DB_USER = os.environ['DB_USER']
-DB_PASSWORD = os.environ['DB_PASSWORD']
-DB_HOST = os.environ['DB_HOST']
-DB_PORT = os.environ['DB_PORT']
-DB_CHARSET = os.environ['DB_CHARSET']
+DB_NAME = os.environ.get('DB_NAME', 'db_name')
+DB_USER = os.environ.get('DB_USER', 'db_user')
+DB_PASSWORD = os.environ.get('DB_PASSWORD', 'db_pass')
+DB_HOST = os.environ.get('DB_HOST', '127.0.0.1')
+DB_PORT = os.environ.get('DB_PORT', 3306)
+DB_CHARSET = os.environ.get('DB_CHARSET', 'utf8mb4')
 
-REDIS_DB_HOST = os.environ['REDIS_HOST']
-REDIS_DB_PORT = os.environ['REDIS_PORT']
-REDIS_DB_USER = os.environ['REDIS_USER']
-REDIS_DB_PASSWORD = os.environ['REDIS_PASSWORD']
-REDIS_DB_NAME = os.environ['REDIS_DB_NAME']
+REDIS_DB_HOST = os.environ.get('REDIS_HOST', '127.0.0.1')
+REDIS_DB_PORT = os.environ.get('REDIS_PORT', 6379)
+REDIS_DB_USER = os.environ.get('REDIS_USER', '')
+REDIS_DB_PASSWORD = os.environ.get('REDIS_PASSWORD', '')
+REDIS_DB_NAME = os.environ.get('REDIS_DB_NAME', 'db')
 
 WEATHER_TOKEN = os.environ['WEATHER_TOKEN']  # API token weather
 
