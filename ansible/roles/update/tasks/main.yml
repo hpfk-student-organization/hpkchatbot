@@ -33,9 +33,9 @@
             textadi/hpkchatbot:latest
           env_file:
             /bot/.env
-          #          environment:
-          #            - DB_HOST=mariadb
-          #            - REDIS_HOST=redis
+          environment:
+            - DB_HOST=mariadb
+            - REDIS_HOST=redis
           volumes:
             - /bot/data:/bot/data
             - /bot/logs:/bot/logs
@@ -46,7 +46,7 @@
           image:
             mariadb:10.6
           ports:
-            - 127.0.0.1:3306:3306
+            - 3306:3306
           volumes:
             - /bot/db:/var/lib/mysql
           environment:
@@ -58,4 +58,4 @@
           image:
             "redis:7.0-alpine"
           ports:
-            - 127.0.0.1:6379:6379
+            - 6379:6379
