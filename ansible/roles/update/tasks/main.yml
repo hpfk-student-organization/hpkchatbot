@@ -26,9 +26,7 @@
 - name: Create redis conf
   ansible.builtin.copy:
     content:
-      "
-      slave-read-only no
-      "
+      "slave-read-only no"
     dest: /bot/redis/conf/redis.conf
 
 - name: Login in DockerHub
@@ -78,8 +76,3 @@
             - /bot/redis/conf:/usr/local/etc/redis
           ports:
             - 6379:6379
-- name:
-  ansible.builtin.shell:
-    cmd:
-      # FIX You can't write against a read only replica.
-      echo slaveof no one | nc 127.0.0.1 6379
