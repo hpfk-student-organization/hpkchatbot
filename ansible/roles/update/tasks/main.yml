@@ -27,6 +27,7 @@
   ansible.builtin.copy:
     src: ./redis.conf
     dest: /bot/redis/conf/redis.conf
+    remote_src: true
 
 - name: Login in DockerHub
   community.docker.docker_login:
