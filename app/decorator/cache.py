@@ -1,5 +1,5 @@
 import inspect
-import logging
+from loguru import logger
 from datetime import datetime
 from functools import wraps
 
@@ -21,10 +21,10 @@ def cache(ttl: int = 5):
                 decorator_cache[time] = datetime.utcnow()
                 decorator_cache[name_and_value_func] = func(*args, **kwargs)
 
-                logging.debug("Saving result in cache function({}) - {}...".format(
+                logger.debug("Saving result in cache function({}) - {}...".format(
                     name_and_value_func, decorator_cache[name_and_value_func][:50]))
 
-            logging.debug("Get result with cache function({}) - {}...".format(
+            logger.debug("Get result with cache function({}) - {}...".format(
                 name_and_value_func, decorator_cache[name_and_value_func][:50]))
 
             return decorator_cache[name_and_value_func]

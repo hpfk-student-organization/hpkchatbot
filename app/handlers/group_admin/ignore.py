@@ -1,4 +1,4 @@
-import logging
+from loguru import logger
 
 from aiogram import types
 from aiogram.filters import StateFilter
@@ -19,4 +19,4 @@ async def ignore_in_admin_chat_message(message: types.Message):
 async def ignore_in_admin_chat_callback(query: CallbackQuery, state: FSMContext):
     await query.message.edit_reply_markup()
     await query.answer('Не розумію')
-    logging.debug('Ignore clicking in admin group')
+    logger.debug('Ignore clicking in admin group')

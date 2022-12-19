@@ -1,4 +1,4 @@
-import logging
+from loguru import logger
 
 import aiogram
 from aiogram import types, exceptions
@@ -38,8 +38,8 @@ async def aiogram_exceptions_often_retry_edit_message(update, file_exception):
 async def aiogram_exceptions_message_is_not_modified(update, exception, file_exception):
     """IF user clicking inline button two times and telegram not can edit text"""
     await update.update.callback_query.answer(cache_time=0)
-    logging.warning(file_exception)
-    logging.warning(exception)
+    logger.warning(file_exception)
+    logger.warning(exception)
 
 
 @router.errors(
@@ -56,8 +56,8 @@ async def aiogram_exceptions_message_is_not_modified(update, exception, file_exc
 
     """
     await update.update.callback_query.answer(cache_time=0)
-    logging.warning(file_exception)
-    logging.warning(exception)
+    logger.warning(file_exception)
+    logger.warning(exception)
 
 
 @router.errors(
@@ -107,8 +107,8 @@ async def aiogram_exceptions_telegram_forbidden_in_anonim_chat(
     @param bot:
 
     """
-    logging.warning(file_exception)
-    logging.warning(exception)
+    logger.warning(file_exception)
+    logger.warning(exception)
     message_text = "Співрозмовник завершив листування!"
     await send_message_with_kb(bot=bot, state=state, text=message_text)
 
@@ -130,8 +130,8 @@ async def aiogram_exceptions_in_anonim_chat(
     @param bot:
 
     """
-    logging.warning(file_exception)
-    logging.warning(exception)
+    logger.warning(file_exception)
+    logger.warning(exception)
     message_text = "Сталася невідома помилка під час спілкування із користувачем"
 
     await send_message_with_kb(bot=bot, state=state, text=message_text)

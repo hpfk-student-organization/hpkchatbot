@@ -1,5 +1,5 @@
 import json
-import logging
+from loguru import logger
 import re
 from time import perf_counter
 from typing import List
@@ -57,7 +57,7 @@ def get_id_colum_with_bold_style(path_to_file) -> List[list]:
                 value = row.pop()
                 schema[-1][len(row)].append(value.font.bold if value.font else False)
     end = perf_counter()
-    # logging.debug("Total time {0:.2f}s".format(end - begin))
+    # logger.debug("Total time {0:.2f}s".format(end - begin))
     return schema
 
 
@@ -366,17 +366,17 @@ def read_excel(path_to_file):
                         )
                     tmp_name_teacher_flag = teacher
         end = perf_counter()
-        logging.debug("Total time {0:.2f}s".format(end - begin))
+        logger.debug("Total time {0:.2f}s".format(end - begin))
 
         save_new_schedule_in_db(result_structure)
     except Exception as e:
         msg = "Sheet - {0}, column - {1}, line - {2}".format(sheet_tag, key_tag, key_column_tag)
-        logging.warning("See coordinate on :{0}".format(msg))
+        logger.warning("See coordinate on :{0}".format(msg))
         return msg
 
 
 def save_new_schedule_in_db(result_structure: list[tuple[str, ...]]):
     Schedule().clear_all_table_with_schedule()
 
-    logging.info("Saving schedule in db - {}".format(bool(result_structure)))
+    logger.info("Saving schedule in db - {}".format(bool(result_structure)))
     Schedule().insert_all_schedule_in_table(result_structure)

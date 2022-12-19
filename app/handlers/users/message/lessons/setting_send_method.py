@@ -1,4 +1,4 @@
-import logging
+from loguru import logger
 
 from aiogram import types
 from aiogram.filters import StateFilter, Text
@@ -36,7 +36,7 @@ async def get_inl_kb_with_setting(message: types.Message, state: FSMContext):
 async def inline_menu_setting_method_replacements(query: CallbackQuery, callback_data: LessonsCBData):
     type_inl_btn: str = callback_data.type_inl_btn
     callback_id: int = callback_data.callback_id
-    logging.debug("{}:{}".format(type_inl_btn, callback_id))
+    logger.debug("{}:{}".format(type_inl_btn, callback_id))
 
     if type_inl_btn == 'status':
         Replacements().update_subscription_status(telegram_id=query.from_user.id, status=callback_id)

@@ -1,4 +1,4 @@
-import logging
+from loguru import logger
 from typing import List, Optional
 
 import aiogram
@@ -31,7 +31,7 @@ async def send_new_photo_for_replacements(message: types.Message, state: FSMCont
         text=message_text,
         reply_markup=LessonsKb.back()
     )
-    logging.debug("Remove file_id with databases")
+    logger.debug("Remove file_id with databases")
     MediaFileID().delete(telegram_id=message.from_user.id, type_file_id='replacement')
     await state.set_state(LessonsStates.send_new_replacements)
 
@@ -74,7 +74,7 @@ async def get_media_album(
     photo_album_download_notification_message = await message.answer(
         text=saving_message_text
     )
-    logging.debug('Get file_id')
+    logger.debug('Get file_id')
     await save_file_id_in_database(
         list_file_id=list_file_id,
         telegram_id=message.from_user.id,
@@ -91,7 +91,7 @@ async def save_file_id_in_database(
     """
     Function for saving file_id with telegram in databases
     """
-    logging.debug("Saving list file_id in databases")
+    logger.debug("Saving list file_id in databases")
 
     if isinstance(list_file_id, str):
         list_file_id = [list_file_id]
@@ -152,7 +152,7 @@ async def get_photo_in_file_replacements(message: types.Message):
     """
 
     not_support_photo_in_file_message_text = "Не вдається зберегти. Спробуй відправити фото з стисненням"
-    logging.warning("Send user for photo replacements in format - {0}".format(message.document.mime_type))
+    logger.warning("Send user for photo replacements in format - {0}".format(message.document.mime_type))
     await message.answer(text=not_support_photo_in_file_message_text)
 
 
@@ -166,7 +166,7 @@ async def not_support_file(message: types.Message):
     """
 
     not_support_message_text = "Тип файла не підтримується. Спробуй відправити фото іншого розширення"
-    logging.warning("Not found support send user for photo replacements. File - {0}".format(message.document.mime_type))
+    logger.warning("Not found support send user for photo replacements. File - {0}".format(message.document.mime_type))
     await message.answer(text=not_support_message_text)
 
 

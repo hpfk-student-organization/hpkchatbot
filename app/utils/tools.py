@@ -1,6 +1,6 @@
 import hashlib
 import inspect
-import logging
+from loguru import logger
 import os
 import sys
 from typing import Optional, List
@@ -140,12 +140,12 @@ async def remove_file_in_dir(path_to_dir: Optional[str]) -> Optional[bool]:
     """
     if not os.path.exists(path_to_dir):
         return False
-    logging.debug("Start remove file and dir in dir {}".format(path_to_dir))
+    logger.debug("Start remove file and dir in dir {}".format(path_to_dir))
     for file in os.listdir(path_to_dir):
         os.remove(os.path.join(path_to_dir, file))
     # os.rmdir(path_to_dir)
 
-    logging.debug("Remove files in dir {}".format(path_to_dir))
+    logger.debug("Remove files in dir {}".format(path_to_dir))
 
     return True
 
@@ -161,11 +161,11 @@ def create_dir(path_to_dir: Optional[str]) -> Optional[bool]:
         Note
     """
     if os.path.exists(path_to_dir):
-        logging.debug("Dir exist {}".format(path_to_dir))
+        logger.debug("Dir exist {}".format(path_to_dir))
         return False
 
     os.makedirs(path_to_dir)
-    logging.debug("Create dir {}".format(path_to_dir))
+    logger.debug("Create dir {}".format(path_to_dir))
 
     return True
 

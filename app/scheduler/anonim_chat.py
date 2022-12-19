@@ -1,4 +1,4 @@
-import logging
+from loguru import logger
 
 import aiogram
 from aiogram.fsm.context import FSMContext
@@ -17,10 +17,10 @@ __MAX_INSTANCES = 1
 
 async def create_new_anonim_chat_with_two_user(_jobs_id, bot: aiogram.Bot, state: FSMContext):
     if AnonimChat().get_if_two_sex_user_in_queue():
-        logging.debug(AnonimChat().get_all_telegram_id_in_queue(sex=False))
+        logger.debug(AnonimChat().get_all_telegram_id_in_queue(sex=False))
         telegram_id_woman = list(AnonimChat().get_all_telegram_id_in_queue(sex=False))[-1]
 
-        logging.debug(AnonimChat().get_all_telegram_id_in_queue(sex=True))
+        logger.debug(AnonimChat().get_all_telegram_id_in_queue(sex=True))
         telegram_id_man = list(AnonimChat().get_all_telegram_id_in_queue(sex=True))[0]
 
         AnonimChat().update_connect_with(telegram_id=telegram_id_man, connect_with_telegram_id=telegram_id_woman)

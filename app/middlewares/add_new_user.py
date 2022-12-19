@@ -1,4 +1,4 @@
-import logging
+from loguru import logger
 from datetime import datetime
 from typing import Callable, Dict, Any, Awaitable, Optional
 
@@ -23,7 +23,7 @@ class AddNewUserMessageMiddleware(BaseMiddleware):
             telegram_id=event.from_user.id,
             username=event.from_user.username
         )
-        logging.debug("Add or update info for user in databases")
+        logger.debug("Add or update info for user in databases")
         return await handler(event, data)
 
 
