@@ -1,5 +1,5 @@
 import datetime
-import logging
+from loguru import logger
 import re
 from typing import Optional, List
 
@@ -103,7 +103,7 @@ def __formation_main_table_replacement(list_replacements: Optional[list[str]]):
     for item_replacements in list_replacements:  # 'КІ-222\n5-6\n\nМатематика\nКозубець\n124'
         item_replacements = item_replacements[1:-1].replace('\n\n', '\n \n')
         if not len(item_replacements) - 7:  # пропускаємо порожній рядок із замінами, за допомогою підрахунку символів
-            logging.debug('Skip one null replacements')
+            logger.debug('Skip one null replacements')
             continue
         group, number_lesson, old_teacher, name_subject, new_teacher, room, *another = item_replacements.split('\n')
         if group:  # на порожнє поле із групою встановлюємо попереднє значення назви групи
@@ -127,7 +127,7 @@ async def parsing_replacements(html_code: Optional[str], bot: aiogram.Bot):
     @return:
     """
     soup = BeautifulSoup(html_code, 'html.parser')
-    logging.info('Search new replacements...')
+    # logger.debug('Search new replacements...')
     information_for_replacements = __get_information_for_replacements(soup)
 
     last_day_replacements = ''
@@ -135,12 +135,12 @@ async def parsing_replacements(html_code: Optional[str], bot: aiogram.Bot):
     if len(info_of_replacements):
         last_day_replacements = info_of_replacements[0]
     if len(information_for_replacements) and information_for_replacements[0] == last_day_replacements:
-        logging.info('Not found new tomorrow replacements')
+        # logger.debug('Not found new tomorrow replacements')
         return
 
-    logging.info('Found new tomorrow replacements ')
+    logger.info('Found new tomorrow replacements ')
     Replacements().clear_all_table_with_replacements()
-    logging.debug('Clear old replacements')
+    logger.info('Clear old replacements')
 
     # main_table_with_replacements_tomorrow: list = list(map(__get_text, list_with_tag_about_replacements))[6:]
 
@@ -153,11 +153,11 @@ async def parsing_replacements(html_code: Optional[str], bot: aiogram.Bot):
     )
     main_table_with_replacements_tomorrow = __formation_main_table_replacement(main_table_with_replacements_tomorrow)
 
-    logging.debug('Start save information of replacements in databases')
+    logger.debug('Start save information of replacements in databases')
     Replacements().insert_all_replacements_in_table(all_replacements=main_table_with_replacements_tomorrow)
     Replacements().insert_info_replacements_in_table(info_of_replacements=information_for_replacements)
     Replacements().insert_news_replacements_in_table(news_of_replacements=news_replacements)
-    logging.info('Save finish information')
+    logger.info('Save finish information')
 
     list_user_sub = Replacements().get_subscription_who_get_replacements_from_site()
     await send_new_replacements_for_sub(bot=bot, list_user_sub=list_user_sub)

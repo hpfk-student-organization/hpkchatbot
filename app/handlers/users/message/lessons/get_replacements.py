@@ -1,4 +1,4 @@
-import logging
+from loguru import logger
 from typing import Optional
 
 import aiogram
@@ -67,7 +67,7 @@ async def get_photo_with_replacements(message: types.Message):
     StateFilter(LessonsStates.main_menu)
 )
 async def inline_menu_get_replacements(query: CallbackQuery, callback_data: LessonsCBData, bot: aiogram.Bot):
-    logging.info('Show replacements with site')
+    logger.info('Show replacements with site')
     match callback_data.type_inl_btn:
         case 'see_with_site':
             process_download_message_id = callback_data.message_id.split('|')[0]
@@ -131,7 +131,7 @@ def create_message_for_replacements_with_site(name_group: Optional[str | None]) 
 
 
 async def _get_replacements_from_site(query: CallbackQuery, callback_data: LessonsCBData):
-    logging.debug('Click on inline button with inline_keyboard for get type replacements')
+    logger.debug('Click on inline button with inline_keyboard for get type replacements')
 
     name_group = Replacements().get_subscription_name_group(telegram_id=query.from_user.id)
     replacements_from_site_message_text = create_message_for_replacements_with_site(

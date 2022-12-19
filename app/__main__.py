@@ -1,7 +1,6 @@
 import asyncio
 
-import logging
-import os
+from loguru import logger
 
 import config
 from settings import storage, dp, bot, scheduler
@@ -9,32 +8,32 @@ from settings import storage, dp, bot, scheduler
 
 async def on_shutdown():
     """Виконуватися коли будемо зупиняти бота"""
-    logging.debug("Scheduler storage stopped - Ok")
+
+    logger.debug("Scheduler storage stopped - Ok")
     await bot.session.close()
-    logging.debug("Bot stopped - Ok")
+    logger.debug("Bot stopped - Ok")
     await storage.close()
-    logging.debug("Redis storage stopped - Ok")
+    logger.debug("Redis storage stopped - Ok")
     scheduler.shutdown()
 
 
 async def on_startup():
     """Під час запуску бота"""
+
     from scheduler.replacements import add_job, jobs_id
     await add_job(jobs_id[0], bot)
     scheduler.start()
-    logging.debug('Starting process start to main commands for bots...')
-    logging.info('Bot start - OK')
+    logger.debug('Starting process start to main commands for bots...')
+    logger.info('Bot start - OK')
 
     from utils.tools import check_and_create_dir
     list_path=[config.PATH_TO_PHOTO_REPLACEMENTS,config.PATH_TO_PHOTO_TIME_BOOK, config.PATH_TO_FILE_SCHEDULE]
     check_and_create_dir(list_path)
 
 
-
+@logger.catch()
 async def main() -> None:
-    # logging.getLogger('apscheduler.executors.default').setLevel(logging.WARNING)
-
-    logging.debug('Include routers in Dispatcher')
+    logger.debug('Include routers in Dispatcher')
 
     from handlers import router_in_chat, router_in_private, router_e, router_for_admin
 

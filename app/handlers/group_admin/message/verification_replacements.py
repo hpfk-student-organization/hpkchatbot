@@ -1,6 +1,6 @@
 # перевіряємо нові цитати
 import datetime
-import logging
+from loguru import logger
 from typing import Optional, List
 
 import aiogram
@@ -150,7 +150,7 @@ async def save_photo_replacements_in_file_storage(bot: aiogram.Bot, list_file_id
     await remove_file_in_dir(config.PATH_TO_PHOTO_REPLACEMENTS)
 
     for file_id in list_file_id:
-        logging.debug(file_id)
+        logger.debug(file_id)
         file = await bot.get_file(file_id)
         await bot.download_file(
             file_path=file.file_path,

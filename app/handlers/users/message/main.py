@@ -1,4 +1,4 @@
-import logging
+from loguru import logger
 from datetime import datetime
 from typing import Optional
 
@@ -79,7 +79,7 @@ async def anonymous_chat_button(message: types.Message, state: FSMContext):
 
     start_time = datetime.now()
     message_text = "Що хочеш дізнатися? {0}".format(weather.get_detailed_status(emoji=True))
-    logging.debug(datetime.now() - start_time)
+    logger.debug(datetime.now() - start_time)
 
     if not AnonimChat().is_check_exist_user(telegram_id=message.from_user.id):
         message_text = "👋 Привіт!\n\n" \

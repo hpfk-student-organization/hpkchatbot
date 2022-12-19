@@ -1,5 +1,5 @@
 # Даний middleware потрібен, щоб пропустити адмінів. А ті, хто не адміни - сказати, що тикати нельзя.
-import logging
+from loguru import logger
 from typing import Callable, Dict, Any, Awaitable, Optional
 
 from aiogram import BaseMiddleware
@@ -22,16 +22,16 @@ class CheckAdminMessageMiddleware(BaseMiddleware):
             event: types.Message,
             data: Dict[str, Any]
     ) -> Any:
-        logging.debug("Send message in admin group")
+        logger.debug("Send message in admin group")
         # check for action for only admin in admin group
         if _is_admin(user_id=event.from_user.id):
-            logging.debug("Send message in admin group by admin")
+            logger.debug("Send message in admin group by admin")
             return await handler(event, data)
 
         # remove message if user not admin
-        logging.debug("Send message in admin group not by admin")
+        logger.debug("Send message in admin group not by admin")
         await event.delete()
-        logging.debug("Message delete")
+        logger.debug("Message delete")
         return
 
 
@@ -43,7 +43,7 @@ class CheckAdminCallbackMiddleware(BaseMiddleware):
             event: types.CallbackQuery,
             data: Dict[str, Any]
     ) -> Any:
-        logging.debug("Click btn on inline_kb in admin group")
+        logger.debug("Click btn on inline_kb in admin group")
         if _is_admin(user_id=event.from_user.id):
             return await handler(event, data)
 

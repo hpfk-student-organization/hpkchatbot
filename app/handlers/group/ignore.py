@@ -1,4 +1,4 @@
-import logging
+from loguru import logger
 
 from aiogram import types
 from aiogram.filters import StateFilter
@@ -20,5 +20,5 @@ async def ignore_in_chat_message(message: types.Message):
 )
 async def ignore_in_chat_callback(query: CallbackQuery):
     """Get unknown callback in chat"""
-    logging.debug("Get unknown callback in chat")
+    logger.debug("Get unknown callback in chat")
     pass

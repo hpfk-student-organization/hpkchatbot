@@ -1,4 +1,4 @@
-import logging
+from loguru import logger
 
 from aiogram import types
 from aiogram.filters import StateFilter, Text
@@ -72,7 +72,7 @@ async def back_to_input_quotes(message: types.Message, state: FSMContext):
 )
 async def back_to_lesson_main_menu_with_remove_tmp_file(message: types.Message, state: FSMContext):
     """Коли ми хочемо повернутися в головне меню сторінки Lesson, та видалити за собою фото, які раніше відсилалися"""
-    logging.debug("Remove file_id with databases")
+    logger.debug("Remove file_id with databases")
     MediaFileID().delete(telegram_id=message.from_user.id, type_file_id='replacement')
 
     from handlers.users.message.main import lessons_button

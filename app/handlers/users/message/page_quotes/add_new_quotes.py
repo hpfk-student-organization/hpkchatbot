@@ -1,5 +1,5 @@
 # додаємо нові цитати
-import logging
+from loguru import logger
 
 import aiogram
 from aiogram import types, F
@@ -42,7 +42,7 @@ async def group_add_to_new_quotes_button(message: types.Message, state: FSMConte
                        StateFilter(QuotesTeacherStates.select_teacher))
 async def inline_menu_add_quotes(
         query: CallbackQuery, callback_data: SendNewQuotesCBData, state: FSMContext, bot: aiogram.Bot):
-    logging.debug('Click on inline button with inline_keyboard for select teacher')
+    logger.debug('Click on inline button with inline_keyboard for select teacher')
     levels = {
         0: group_add_to_new_quotes_button_first_letter,
         1: group_add_to_new_quotes_button_get_all_teacher_with_first_letter,
@@ -175,7 +175,7 @@ async def send_new_quotes_for_verification(message: types.Message, state: FSMCon
         # Exit with function
         return
     except Exception as error:
-        logging.error(f"{error}, when bot try send quotes in admin chat. Try edit id_group for admin. "
+        logger.error(f"{error}, when bot try send quotes in admin chat. Try edit id_group for admin. "
                       f"Not correct ID - '{config.ID_GROUP_ADMIN}'")
 
     message_test_about_fail_send_quotes = "Нажаль, цитату не вдалося надіслати на перевірку. " \

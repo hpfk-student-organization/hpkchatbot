@@ -1,4 +1,4 @@
-import logging
+from loguru import logger
 
 import aiogram
 from aiogram import types
@@ -91,12 +91,12 @@ async def processing_in_chat_with_message(message: types.Message, bot: aiogram.B
 @router.message(StateFilter(AnonymousChatStates.chat_message))
 async def processing_in_chat_with_message(message: types.Message, bot: aiogram.Bot):
     """Якщо користувач надіслав об'єкт, якого немає в обробці"""
-    logging.warning("No support this content_type - {0}".format(message.content_type))
+    logger.warning("No support this content_type - {0}".format(message.content_type))
 
 
 @router.edited_message(StateFilter(AnonymousChatStates.chat_message))
 async def processing_edit_text_in_chat_with_message(message: types.Message, bot: aiogram.Bot):
     """Якщо користувач змінив об'єкт, якого немає в обробці"""
-    logging.warning("No support edit text")
+    logger.warning("No support edit text")
     return
 
