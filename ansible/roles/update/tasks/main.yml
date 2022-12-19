@@ -25,9 +25,9 @@
 
 - name: Create redis conf
   ansible.builtin.copy:
-    src: ./redis.conf
+    content:
+      "slave-read-only no"
     dest: /bot/redis/conf/redis.conf
-    remote_src: true
 
 - name: Login in DockerHub
   community.docker.docker_login:
