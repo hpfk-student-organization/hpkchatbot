@@ -327,7 +327,7 @@ class Users(BaseMysql):
 
             str_set_for_mysql = _up_string(str_set_for_mysql, 'user_old_actions', user_old_actions)
             str_set_for_mysql = _up_string(str_set_for_mysql, 'user_register', user_register)
-            str_set_for_mysql = _up_string(str_set_for_mysql, 'private_chat', terms_of_user)
+            str_set_for_mysql = _up_string(str_set_for_mysql, 'terms_of_user', terms_of_user)
             str_set_for_mysql = _up_string(str_set_for_mysql, 'user_admin', user_admin)
 
             sql = "UPDATE {0} SET {1} WHERE telegram_id = %s"
@@ -351,7 +351,7 @@ class Users(BaseMysql):
             user_register: date user register in system(bot)
             user_old_actions: date last operation in system(bot)
             username: username in telegram(if exist). Default is None
-            private_chat: status terms of user. Default is False
+            terms_of_user: status terms of user. Default is False
             user_admin: user is admin? Default in False
         """
 
