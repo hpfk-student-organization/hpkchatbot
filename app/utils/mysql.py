@@ -293,7 +293,7 @@ class Users(BaseMysql):
 
         """
         with self.connection.cursor() as cursor:
-            sql = "INSERT INTO {0} (telegram_id, username, private_chat, user_admin, user_register, user_old_actions) " \
+            sql = "INSERT INTO {0} (telegram_id, username, terms_of_user, user_admin, user_register, user_old_actions) " \
                   "VALUES (%s, %s, %s, %s, %s, %s)"
 
             cursor.execute(
