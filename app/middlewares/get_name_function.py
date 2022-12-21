@@ -3,6 +3,7 @@ from typing import Callable, Dict, Any, Awaitable
 
 from aiogram import BaseMiddleware
 from aiogram.types import TelegramObject
+from loguru import logger
 
 import config
 
@@ -29,6 +30,7 @@ class GetNameFunctionMiddleware(BaseMiddleware):
     Даний Middleware дозволяє отримати інформацію про файл, в якому виникла помилка
 
     """
+
 
     async def __call__(
             self,
