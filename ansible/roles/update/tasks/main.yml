@@ -77,7 +77,13 @@
           ports:
             - 6379:6379
 
+- name: Log out of DockerHub
+  community.docker.docker_login:
+    state: absent
+
 - name: Fix redis cache
   ansible.builtin.shell:
     cmd:
       echo slaveof no one | nc 127.0.0.1 6379 -q 1
+
+
