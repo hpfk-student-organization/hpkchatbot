@@ -3,6 +3,8 @@ name: Github CI/CD
 on:
   push:
     branches: "main"
+env:
+  IMAGE: ${{ secrets.DOCKER_HUB_LOGIN }}/${{ secrets.DOCKER_HUB_REPO }}
 
 jobs:
   build-and-push:
@@ -21,13 +23,13 @@ jobs:
 
       - name: Build the Docker image
         run: |
-          docker build . --file Dockerfile --tag $DOCKER_HUB_LOGIN/$DOCKER_HUB_REPO:latest
-          docker build . --file Dockerfile --tag $DOCKER_HUB_LOGIN/$DOCKER_HUB_REPO:$(date +'%Y-%m-%d')        
+          docker build . --file Dockerfile --tag $IMAGE:latest
+          docker tag $IMAGE:latest $IMAGE:$(date +'%Y-%m-%d-%H')        
 
       - name: Push the Docker image
         run: |
-          docker push $DOCKER_HUB_LOGIN/$DOCKER_HUB_REPO:latest
-          docker push $DOCKER_HUB_LOGIN/$DOCKER_HUB_REPO:$(date +'%Y-%m-%d') 
+          docker push $IMAGE:latest
+          docker push $IMAGE:$(date +'%Y-%m-%d') 
 
   update:
     needs: [ build-and-push ]
@@ -38,7 +40,7 @@ jobs:
 
       - name: Create hosts
         run: |
-          echo 'ansible_password=${{ secrets.PASSWORD }}' >> ansible/hosts.ini
+          #(echo 'ansible_password=${{ secrets.PASSWORD }}' >> ansible/hosts.ini)
           sed -i 's/SERVER_IP/${{ secrets.SERVER_IP }}/' ansible/hosts.ini
 
       - name: Run playbook
@@ -47,7 +49,8 @@ jobs:
           playbook: ansible/init.yml
           inventory: ansible/hosts.ini
           galaxy_file: ansible/requirements.yml
-          user: root
+          user: git
+          private_key: ${{ secrets.PRIVATE_KEY }}
           extra_vars: |
             - docker_hub_login=${{ secrets.DOCKER_HUB_LOGIN }}
             - docker_hub_pass=${{ secrets.DOCKER_HUB_PASS }}
