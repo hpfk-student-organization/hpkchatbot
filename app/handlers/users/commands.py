@@ -31,7 +31,6 @@ async def commands_start_private(message: types.Message, state: FSMContext):
     Я, бот {bot_name}, який маю багато корисної інформації для студента коледжу ХПК.
     Буду з тобою ділитися корисною інформацією і намагатися розважити.
     """
-
     await message.answer(
         text=dedent(start_text).format(first_name=message.from_user.first_name, bot_name="ХПФК-ашнік"),
         reply_markup=types.ReplyKeyboardRemove()
