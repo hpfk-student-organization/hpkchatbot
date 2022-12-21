@@ -4,8 +4,6 @@ on:
   push:
     branches: "main"
 
-
-
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
@@ -64,4 +62,4 @@ jobs:
           ANSIBLE_DEPRECATION_WARNINGS: 'false'
           
 
-        
+  
