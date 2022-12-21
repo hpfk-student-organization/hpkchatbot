@@ -24,7 +24,7 @@ jobs:
       - name: Build the Docker image
         run: |
           docker build . --file Dockerfile --tag $IMAGE:latest
-          docker images
+          docker tag $IMAGE:latest $IMAGE:latest 
           docker tag $IMAGE:latest $IMAGE:$(date +'%Y-%m-%d-%H')        
 
       - name: Push the Docker image
