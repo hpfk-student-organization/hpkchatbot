@@ -719,6 +719,13 @@ class Schedule(BaseMysql):
             cursor.execute(sql.format(self._table_table_schedule), (teacher,))
             return cursor.fetchall()
 
+    def get_information_of_group(self, name_group: str,  day:str) -> json:
+        with self.connection.cursor() as cursor:
+            sql = "SELECT {0}.number, {0}.num_s, {0}.start_time, {0}.end_time, {0}.name, {0}.teacher, {0}.room " \
+                  "FROM {0} WHERE {0}.name_group = %s AND {0}.day = %s"
+            cursor.execute(sql.format(self._table_table_schedule), (name_group, day))
+            return cursor.fetchall()
+
 
 class MediaFileID(BaseMysql):
 
@@ -879,7 +886,7 @@ class GlobalValues(BaseMysql):
             lst = cursor.fetchall()
             if not lst:
                 return None
-            lst_value:dict = dict(lst[0])
+            lst_value: dict = dict(lst[0])
             return lst_value.get(list(lst_value.keys())[0], '')
 
     def delete(self, name: Optional[str]):

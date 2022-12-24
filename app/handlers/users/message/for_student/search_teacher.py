@@ -87,10 +87,10 @@ async def get_information_of_teacher(query: CallbackQuery, teacher: str, **kwarg
     day_list = ('Понеділок', 'Вівторок', 'Середа', 'Четвер', 'П\'ятниця')
     number_lesson_list = ('1-2', '3-4', '5-6', '7-8', '9-10', '11-12', '13-14')
 
-    list_information = Schedule().get_information_of_user(teacher)
+    information = Schedule().get_information_of_user(teacher)
     result = dict()
 
-    for item in list_information:
+    for item in information:
         key = item.pop('day')
         len_result = len(result.get(key,[]))
         if not len_result:

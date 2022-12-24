@@ -1,10 +1,10 @@
 import json
-from loguru import logger
 import re
 from time import perf_counter
 from typing import List
 
 import pandas
+from loguru import logger
 from openpyxl import Workbook
 from openpyxl.cell import ReadOnlyCell
 from openpyxl.reader.excel import load_workbook
@@ -282,7 +282,7 @@ def read_excel(path_to_file):
     name_lesson = None
     lesson_schema_k = 0
     day = None
-    num_s = False
+    num_s = None
     number = None
     start_time = None
     end_time = None
@@ -344,7 +344,14 @@ def read_excel(path_to_file):
                     if bold_schema[sheet][key][excel_file.ROWS_WITH_NAME_GROUP - 1 + key_column]:
                         # перевіряємо, чи колонка має текст із жирним стилем(предмет)
                         name_lesson = column_json.get(key_column_str)
-                        num_s: bool = not key_column - lesson_schema_k > 1
+                        # num_s: bool = not key_column - lesson_schema_k > 1
+
+                        num_s = False
+                        if key_column - lesson_schema_k == 1:
+                            num_s = None
+                        elif key_column == lesson_schema_k:
+                            num_s = True
+
                         flag = False
                         tmp_name_teacher_flag = None
                         continue
