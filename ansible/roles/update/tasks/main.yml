@@ -64,7 +64,7 @@
           image:
             mariadb:10.6
           ports:
-            - 127.0.0.1:3306:3306
+            - 3306:3306
           volumes:
             - /bot/db:/var/lib/mysql
           environment:
@@ -79,7 +79,7 @@
             - /bot/redis/data:/data
             - /bot/redis/conf:/usr/local/etc/redis
           ports:
-            - 6379:6379
+            - 127.0.0.1:6379:6379
 
 - name: Log out of DockerHub
   community.docker.docker_login:

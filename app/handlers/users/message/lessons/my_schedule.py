@@ -72,7 +72,7 @@ async def inline_my_group_select_day(query: CallbackQuery, callback_data: Schedu
     reply_markup = ScheduleIKb(name_group=my_group).my_selected_group(
         select_weekday=weekday, click_num_s=num_s)
 
-    message_text = select_day_schedule(day=weekday, name_group=my_group, num_s=num_s)
+    message_text = select_day_schedule(day=int(weekday), name_group=my_group, num_s=num_s)
 
     await query.message.edit_text(
         text=message_text,
@@ -80,12 +80,23 @@ async def inline_my_group_select_day(query: CallbackQuery, callback_data: Schedu
     )
 
 
-def select_day_schedule(day: str, name_group: str, num_s: bool = True) -> str:
+def select_day_schedule(day: int, name_group: str, num_s: bool = True) -> str:
     """
     Збирає розклад, для вказаного дня
 
     @return: Готовий розклад на вибраний день
     """
+
+    day_list = ('Понеділок', 'Вівторок', 'Середа', 'Четвер', 'П\'ятниця')
+    number_lesson_list = ('1-2', '3-4', '5-6', '7-8', '9-10', '11-12', '13-14')
+    error_message = 'Розклад тимчасово не доступний'
+
+    type_date = 'Чисельник' if num_s else 'Знаменник'
+    title_day = day_list[day]
+
+
+    structure_message = '{name_group} - {day}({type_week}):\n\n'
+    structure_message+= ''
     return '{0},{1},{2}'.format(name_group, day, num_s)
 
 
@@ -114,7 +125,7 @@ async def inline_my_group_select_day(query: CallbackQuery, callback_data: Schedu
         reply_markup = ScheduleIKb(name_group=my_group).another_group(
             select_name_group=select_my_g,
             select_weekday=weekday, click_num_s=num_s, all_group=all_group)
-        message_text = select_day_schedule(day=weekday, name_group=select_my_g, num_s=num_s)
+        message_text = select_day_schedule(day=int(weekday), name_group=select_my_g, num_s=num_s)
     else:
         message_text = "Виберіть, розклад якої групи ви хочете переглянути:"
         reply_markup = ScheduleIKb(name_group=my_group).another_group(
