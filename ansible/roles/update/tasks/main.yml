@@ -77,7 +77,6 @@
             redis:7.0-alpine
           volumes:
             - /bot/redis/data:/data
-            - /bot/redis/conf:/usr/local/etc/redis
           ports:
             - 6379:6379
 
@@ -89,5 +88,3 @@
   ansible.builtin.shell:
     cmd:
       echo slaveof no one | nc 127.0.0.1 6379 -q 1
-
-
