@@ -59,7 +59,7 @@ async def ads_button(message: types.Message, state: FSMContext):
     menu_text = "Що хочеш дізнатися?"
     from handlers.users.message.lessons.parssing.schedule import read_excel
     import os
-    read_excel(os.path.join(config.PATH_TO_FILE_SCHEDULE, '20220825_134745-2.xlsx'))
+    # read_excel(os.path.join(config.PATH_TO_FILE_SCHEDULE, '20220825_134745-2.xlsx'))
     read_excel(os.path.join(config.PATH_TO_FILE_SCHEDULE, 'file.xlsx'))
     """for i in range(1, 100):
         print(abc(i), i)

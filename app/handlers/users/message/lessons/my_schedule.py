@@ -1,3 +1,5 @@
+import datetime
+
 from aiogram import types
 from aiogram.filters import StateFilter, Text
 from aiogram.fsm.context import FSMContext
@@ -67,8 +69,6 @@ async def inline_my_group_select_day(query: CallbackQuery, callback_data: Schedu
     weekday = callback_data.weekday
     num_s = callback_data.num_s
 
-
-
     reply_markup = ScheduleIKb(name_group=my_group).my_selected_group(
         select_weekday=weekday, click_num_s=num_s)
 
@@ -93,11 +93,45 @@ def select_day_schedule(day: int, name_group: str, num_s: bool = True) -> str:
 
     type_date = 'Чисельник' if num_s else 'Знаменник'
     title_day = day_list[day]
+    information: list[dict] = Schedule().get_information_of_group(name_group=name_group, day=title_day)
+
+    structure_message = '{name_group} - {day}({type_week}):\n'.format(
+        name_group=name_group, day=title_day, type_week=type_date
+    )
+    _tmp = ''
+    tmp_structure_message = ''
+    for item in information:
+        number = item['number']
+        start_time = str(item['start_time'])
+        end_time = str(item['end_time'])
+        time = '{0}-{1}'.format(
+            datetime.datetime.strptime(start_time, '%H:%M:%S').strftime('%H:%M'),
+            datetime.datetime.strptime(end_time, '%H:%M:%S').strftime('%H:%M'))
+        lesson = item['name']
+        teacher = item['teacher']
+        if teacher is None:
+            teacher = 'Викладач не вказаний'
+        room:str = item['room']
+        if not room:
+            room='Не вказано'
 
 
-    structure_message = '{name_group} - {day}({type_week}):\n\n'
-    structure_message+= ''
-    return '{0},{1},{2}'.format(name_group, day, num_s)
+        _num_s = item['num_s']
+
+        num_lesson = number_lesson_list.index(number)
+
+        if num_s == _num_s or _num_s is None:
+            if not num_lesson == _tmp:
+                structure_message += '\n<b>{num_lesson} пара</b> - {lesson}:\n'.format(
+                    num_lesson=1 + num_lesson, lesson=lesson
+                )
+                _tmp = num_lesson
+
+            structure_message += '{space}{teacher} - <code>{room}</code>\n'.format(
+                space=4 * ' ',
+                teacher=teacher, room=room,
+            )
+    return structure_message
 
 
 #
