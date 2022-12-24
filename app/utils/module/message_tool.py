@@ -3,13 +3,17 @@ import os
 from typing import Optional, List
 
 from aiogram import types
-from aiogram.types import FSInputFile, InputMediaPhoto, Message
+from aiogram.types import FSInputFile, InputMediaPhoto, Message, InputFile
 
 import config
 from settings import global_storage
 from utils.module.redis import RedisGlobalStorage
 from utils.tools import get_dir_hash
 
+
+class ErrorEntryData(Exception):
+    def __init__(self, message: Optional[str]):
+        self.message = message
 
 class EmptyDir(Exception):
     def __init__(self, message: Optional[str], path: Optional[str]):
@@ -88,7 +92,7 @@ class CashingSendPhotos:
             logger.debug('file_id and hash dir - status OK. Try send photo, using file_id ')
 
             # If file_id is exists in memory...
-            media_album = await get_media_album_with_list_file_id(list_file_id=list_file_id, )
+            media_album = await get_media_album_with_list_file_id(list_file_id=list_file_id )
             logger.debug('Create media album use file_id')
             # Try to send message
             try:
@@ -108,6 +112,7 @@ class CashingSendPhotos:
             raise EmptyDir('Not found files in file storage', path_to_dir)
         try:
             logger.debug('Try send photo from file storage')
+
             return await self.message.answer_media_group(media=media_album)
         except Exception as error:
             raise ErrorSend(f'No send message replacements using storage method. Error - {error}')
@@ -122,15 +127,16 @@ async def get_media_album_with_list_file_storage(path: Optional[str], caption: O
     """
     media_album = list()
     # Get all file in dir with replacements and send later
-    for file in os.listdir(path):
+    list_file = os.listdir(path)
+    for file in list_file:
         if len(media_album) >= config.LIMIT_SEND_PHOTO:
             logger.debug('Get replacements photo in media_album with file storage using limit')
             return media_album
-
+        __path = os.path.abspath(os.path.join(path, file))
         media_album.append(
             InputMediaPhoto(
                 media=FSInputFile(
-                    path=os.path.join(path, file),
+                    path=__path,
                 ),
                 caption=caption
             )

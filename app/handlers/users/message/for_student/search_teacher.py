@@ -8,6 +8,7 @@ from keyboards.default import ForStudentsKb
 from keyboards.inline.inline_keyboard import ForStudentIKb, FoundTeacherCBData
 from routers.private_chat.private_chat import router
 from states import ForStudentsStates
+from utils.module.message_tool import ErrorEntryData
 from utils.mysql import Schedule
 
 
@@ -16,10 +17,20 @@ async def search_teacher_btn(message: types.Message, **kwargs):
     """"""
     message_text = "Щоб дізнатися \"🕵️ Де викладач?\" потрібно вибрати викладача. " \
                    "Давай спочатку виберемо першу літеру прізвища викладача"
+    list_letter = Schedule().get_first_letter_teacher()
+
+    if not list_letter:
+        return await message.answer(
+            "На жаль, дізнатися  \"🕵️ Де викладач?\" в даний момент часу не можливо.\n"
+            "Попробуй перевірити доступність функції через деякий час."
+        )
+
+
+    reply_markup=ForStudentIKb().first_letter(list_letter=list_letter)
 
     await message.answer(
         text=message_text,
-        reply_markup=ForStudentIKb().first_letter()
+        reply_markup=reply_markup
     )
 
 
@@ -50,9 +61,16 @@ async def first_letter_for_teacher(query: CallbackQuery, **kwargs):
     message_text = "Щоб дізнатися \"🕵️ Де викладач?\" потрібно вибрати викладача. " \
                    "Давай спочатку виберемо першу літеру прізвища викладача"
 
+    list_letter = Schedule().get_first_letter_teacher()
+
+    if not list_letter:
+        raise ErrorEntryData('Функція не доступна. Попробуй пізніше.')
+
+    reply_markup = ForStudentIKb().first_letter(list_letter=list_letter)
+
     await query.message.edit_text(
         text=message_text,
-        reply_markup=ForStudentIKb().first_letter()
+        reply_markup=reply_markup
     )
 
 

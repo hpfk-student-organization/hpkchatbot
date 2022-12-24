@@ -1,6 +1,8 @@
 - name: Create path
   ansible.builtin.file:
     path: /bot
+    owner: git
+    group: git
     mode: '0755'
     state: directory
 
@@ -16,6 +18,8 @@
       DB_PASSWORD={{ DB_PASSWORD }}\n
       "
     dest: /bot/.env
+    owner: git
+    group: git
 
 #- name: Create path for redis.conf
 #  ansible.builtin.file:
@@ -60,7 +64,7 @@
           image:
             mariadb:10.6
           ports:
-            - 3306:3306
+            - 127.0.0.1:3306:3306
           volumes:
             - /bot/db:/var/lib/mysql
           environment:
