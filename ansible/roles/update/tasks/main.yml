@@ -79,7 +79,7 @@
             - /bot/redis/data:/data
             - /bot/redis/conf:/usr/local/etc/redis
           ports:
-            - 127.0.0.1:6379:6379
+            - 6379:6379
 
 - name: Log out of DockerHub
   community.docker.docker_login:
