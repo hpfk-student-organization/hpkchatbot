@@ -8,6 +8,7 @@ from keyboards.inline.inline_keyboard import ScheduleIKb, ScheduleMMCBData, Sche
     ScheduleAnotherGroupCBData
 from routers.private_chat.private_chat import router
 from states import LessonsStates
+from utils.module.message_tool import ErrorEntryData
 from utils.mysql import Replacements, Schedule
 
 
@@ -37,8 +38,7 @@ async def inline_main_menu_schedule(query: CallbackQuery, callback_data: Schedul
     if ScheduleIKb.main_btn_inline_callback[0] == type_inl_btn:
         "Якщо кнопка - Моя група"
         if name_group is None:
-            await query.answer('Група не вказана')
-            return
+            raise ErrorEntryData('Група не вказана')
         await select_my_group_btn(query=query, name_group=name_group)
 
     elif ScheduleIKb.main_btn_inline_callback[1] == type_inl_btn:
@@ -66,6 +66,8 @@ async def inline_my_group_select_day(query: CallbackQuery, callback_data: Schedu
     my_group = callback_data.my_group
     weekday = callback_data.weekday
     num_s = callback_data.num_s
+
+
 
     reply_markup = ScheduleIKb(name_group=my_group).my_selected_group(
         select_weekday=weekday, click_num_s=num_s)
@@ -105,6 +107,9 @@ async def inline_my_group_select_day(query: CallbackQuery, callback_data: Schedu
 
     all_group = Schedule().get_all_title_group_u()
 
+    if not all_group:
+        raise ErrorEntryData('2')
+
     if weekday is not None:
         reply_markup = ScheduleIKb(name_group=my_group).another_group(
             select_name_group=select_my_g,
@@ -125,6 +130,9 @@ async def inline_my_group_select_day(query: CallbackQuery, callback_data: Schedu
 async def select_another_group_btn(query: CallbackQuery, name_group: str):
     """Коли натиснули кнопка - Інші групи"""
     all_group = Schedule().get_all_title_group_u()
+    if not all_group:
+        raise ErrorEntryData('Список груп, тим часово не доступний. Спробуйте пізніше.')
+    reply_markup = ScheduleIKb(name_group).another_group(all_group=all_group)
     await query.message.edit_reply_markup(
-        reply_markup=ScheduleIKb(name_group).another_group(all_group=all_group),
+        reply_markup=reply_markup
     )

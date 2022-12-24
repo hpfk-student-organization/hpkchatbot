@@ -3,14 +3,13 @@ from typing import Callable, Dict, Any, Awaitable
 
 from aiogram import BaseMiddleware
 from aiogram.types import TelegramObject
-from loguru import logger
 
 import config
 
 
 def to_correct_format_error_trace(error_list: list):
     error: inspect.FrameInfo
-    text_error=''
+    text_error = ''
     for error in error_list[::-1]:
         if '\{}\\'.format(config.VENV_DIR_NAME) in error.filename:  # if file in found in venv
             continue
@@ -30,7 +29,6 @@ class GetNameFunctionMiddleware(BaseMiddleware):
     Даний Middleware дозволяє отримати інформацію про файл, в якому виникла помилка
 
     """
-
 
     async def __call__(
             self,

@@ -870,13 +870,17 @@ class GlobalValues(BaseMysql):
             )
             self.connection.commit()
 
-    def get(self, name: Optional[str]) -> Optional[str]:
+    def get(self, name: Optional[str]) -> Optional[str | None]:
         with self.connection.cursor() as cursor:
             sql = "SELECT {0}.value FROM {0} WHERE {0}.name = %s"
             cursor.execute(
                 sql.format(self._table_global_settings), (name,)
             )
-            return list(cursor.fetchall()[0].values())[0]
+            lst = cursor.fetchall()
+            if not lst:
+                return None
+            lst_value:dict = dict(lst[0])
+            return lst_value.get(list(lst_value.keys())[0], '')
 
     def delete(self, name: Optional[str]):
         with self.connection.cursor() as cursor:

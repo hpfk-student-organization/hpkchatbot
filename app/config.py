@@ -33,9 +33,9 @@ ID_GROUP_ADMIN = os.environ['ID_GROUP_ADMIN']  # Group admin
 
 # System parameters #
 
-PATH_TO_PHOTO_REPLACEMENTS = __NAME_DIR('data/photo/replacements')
-PATH_TO_PHOTO_TIME_BOOK = __NAME_DIR('data/photo/time_book')
-PATH_TO_FILE_SCHEDULE = __NAME_DIR('data/schedule')
+PATH_TO_PHOTO_REPLACEMENTS = __NAME_DIR('data/photo/replacements/')
+PATH_TO_PHOTO_TIME_BOOK = __NAME_DIR('data/photo/time_book/')
+PATH_TO_FILE_SCHEDULE = __NAME_DIR('data/schedule/')
 
 LIMIT_SEND_PHOTO = 10
 

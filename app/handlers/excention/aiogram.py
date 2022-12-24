@@ -1,3 +1,4 @@
+from aiogram.types.error_event import ErrorEvent
 from loguru import logger
 
 import aiogram
@@ -15,7 +16,7 @@ from states import LessonsStates, AnonymousChatStates, ForStudentsStates
     ExceptionTypeFilter(exceptions.TelegramRetryAfter)
 
 )
-async def aiogram_exceptions_often_retry_edit_message(update, file_exception):
+async def aiogram_exceptions_often_retry_edit_message(error_event: ErrorEvent, file_exception):
     """
         Very frequent editing of the message with click to btn
 
@@ -27,7 +28,8 @@ async def aiogram_exceptions_often_retry_edit_message(update, file_exception):
     """
 
     message_text = 'Охолонь. 🥵 Не варто так часто'
-    await update.update.callback_query.answer(text=message_text)
+    callback_query = error_event.update.callback_query
+    await callback_query.answer(text=message_text)
 
 
 @router.errors(
@@ -35,17 +37,18 @@ async def aiogram_exceptions_often_retry_edit_message(update, file_exception):
     ExceptionTypeFilter(exceptions.TelegramBadRequest),
     StateFilter(LessonsStates.menu_settings,ForStudentsStates.main_menu)
 )
-async def aiogram_exceptions_message_is_not_modified(update, exception, file_exception):
+async def aiogram_exceptions_message_is_not_modified(error_event: ErrorEvent, exception, file_exception):
     """IF user clicking inline button two times and telegram not can edit text"""
-    await update.update.callback_query.answer(cache_time=0)
+    callback_query = error_event.update.callback_query
+    await callback_query.answer(cache_time=0)
     logger.warning(file_exception)
-    logger.warning(exception)
+    logger.warning(error_event.exception)
 
 
 @router.errors(
     ExceptionTypeFilter(exceptions.TelegramBadRequest)
 )
-async def aiogram_exceptions_message_is_not_modified(update, exception, file_exception):
+async def aiogram_exceptions_message_is_not_modified(error_event: ErrorEvent, exception, file_exception):
     """
         message is not modified
 
@@ -55,9 +58,10 @@ async def aiogram_exceptions_message_is_not_modified(update, exception, file_exc
     Returns:
 
     """
-    await update.update.callback_query.answer(cache_time=0)
+    callback_query = error_event.update.callback_query
+    await callback_query.answer(cache_time=0)
     logger.warning(file_exception)
-    logger.warning(exception)
+    logger.warning(error_event.exception)
 
 
 @router.errors(
@@ -65,7 +69,7 @@ async def aiogram_exceptions_message_is_not_modified(update, exception, file_exc
     ExceptionTypeFilter(exceptions.TelegramForbiddenError)
 
 )
-async def aiogram_exceptions_user_block_bot(update):
+async def aiogram_exceptions_user_block_bot(error_event: ErrorEvent):
     """
         When user block to bot
 
@@ -75,9 +79,10 @@ async def aiogram_exceptions_user_block_bot(update):
     Returns:
 
     """
+    callback_query = error_event.update.callback_query
 
     message_text = 'Дія недоступна, так як користувач заблокував бота'
-    await update.update.callback_query.answer(text=message_text)
+    await callback_query.answer(text=message_text)
 
 
 async def send_message_with_kb(bot, state, text):
@@ -94,7 +99,7 @@ async def send_message_with_kb(bot, state, text):
     ExceptionTypeFilter(exceptions.TelegramForbiddenError)
 )
 async def aiogram_exceptions_telegram_forbidden_in_anonim_chat(
-        update, bot: aiogram.Bot, state: FSMContext, file_exception, exception
+        error_event: ErrorEvent, bot: aiogram.Bot, state: FSMContext, file_exception, exception
 ):
     """
         When user block to bot in anonim_chat
@@ -117,7 +122,7 @@ async def aiogram_exceptions_telegram_forbidden_in_anonim_chat(
     StateFilter(AnonymousChatStates.chat_message)
 )
 async def aiogram_exceptions_in_anonim_chat(
-        update: types.Update, bot: aiogram.Bot, state: FSMContext, file_exception, exception
+        error_event: ErrorEvent, bot: aiogram.Bot, state: FSMContext, file_exception, exception
 ):
     """
         When aiogram fish unknown error in anonim_chat

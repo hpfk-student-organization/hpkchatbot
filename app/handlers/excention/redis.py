@@ -1,16 +1,17 @@
-from loguru import logger
-
 import aiogram
-from aiogram import types
 from aiogram.filters import ExceptionTypeFilter
+from aiogram.types.error_event import ErrorEvent
+from loguru import logger
 from redis import exceptions
 
 from routers.excention import router
 
 
 @router.errors(ExceptionTypeFilter(exceptions.ConnectionError))
-async def redis_exceptions_connection(update: types.Update, file_exception, exception, bot: aiogram.Bot):
+async def redis_exceptions_connection(error_event: ErrorEvent, file_exception, exception):
     logger.error(file_exception)
-    logger.error(exception)
+    logger.error(error_event.exception)
     message_text = 'Сталася помилка. С пробуй пізніше'
-    await bot.send_message(text=message_text, chat_id=update.message.chat.id)
+    message = error_event.update.message
+    if message is not None:
+        await message.answer(text=message_text)

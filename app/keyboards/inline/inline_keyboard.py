@@ -499,6 +499,9 @@ class ScheduleIKb(BaseButton):
             *list_name_group
         ]
 
+        text_btn_list[0] = '{0} {1}'.format(
+            text_btn_list[0], '- невказана' if name_group is None else name_group)
+
         callback_data_list = [*self.callback_data_list]
         callback_data_list += [
             ScheduleAnotherGroupCBData(
@@ -540,8 +543,6 @@ class ScheduleIKb(BaseButton):
             ])
             adjust = zip_adjust(1, 1, *(5,) * (line_pos_btn + 1), 1, 5)
 
-            text_btn_list[0] = '{0} {1}'.format(
-                text_btn_list[0], '- невказана' if name_group is None else name_group)
 
             if select_weekday is not None:
                 text_btn_list = [self.numerator_inl_btn[int(not click_num_s)], *text_btn_list]
@@ -569,9 +570,9 @@ class ForStudentIKb(BaseButton):
     }
 
     @staticmethod
-    def first_letter():
+    def first_letter(list_letter=Optional[list]):
         from utils.tools import sort
-        text_btn_list = sort(Schedule().get_first_letter_teacher(), key_list=UA_RUS_EN)
+        text_btn_list = sort(list_letter, key_list=UA_RUS_EN)
         callback_data_list = [FoundTeacherCBData(
             type_inl_btn='letter', letter=letter, level=1) for letter in text_btn_list]
 

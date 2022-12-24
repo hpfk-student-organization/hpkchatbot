@@ -36,7 +36,7 @@ async def commands_start_private(message: types.Message, state: FSMContext):
         reply_markup=types.ReplyKeyboardRemove()
     )
 
-    await asyncio.sleep(1)
+    await asyncio.sleep(0.5)
     await command_main_menu(message=message, state=state)
 
 
@@ -117,3 +117,24 @@ async def command_main_menu(message: types.Message, state: FSMContext):
     )
     await state.clear()
     await __remove_old_task(task=task, telegram_id=message.from_user.id)
+
+
+@router.message(
+    Command(commands='menu'),
+    StateFilter(*__state_for_command)
+)
+async def command_help(message: types.Message):
+    """
+    Функція інформації про бота
+
+    @param message:
+    @param state:
+    @return:
+    """
+    message_text = "Привіт.\n" \
+                   "Це неличка інформація про те, що цей бот ХПФК, має багато корисного для студентів коледжу:" \
+                   " 💬 Цитати викладачів, 📄 Заміни, 🕵️ Де викладач?, і багато, багато іншого та корисного." \
+                   "\n\nЗ питаннями та пропозиціями писати " \
+                   "<a href='https://www.instagram.com/hpkchatbot'>сюди</a>" \
+                   "\n\n<i>В тебе все вийде, потрібно тільки в себе повірити...</i>"
+    await message.answer(message_text)
