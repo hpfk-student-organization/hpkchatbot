@@ -26,7 +26,7 @@ async def get_inl_kb_with_setting(message: types.Message, state: FSMContext):
         for user in info_user_list:
             number += 1
             username, count_message, show_username = user
-            if show_username and not username == 'None':
+            if show_username and not username is None:
                 table_rating += template.format(number, '@' + username, count_message)
                 continue
             table_rating += template.format(number, '🤫', count_message)
