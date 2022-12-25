@@ -164,6 +164,7 @@ async def parsing_replacements(html_code: Optional[str], bot: aiogram.Bot):
 
 
 async def send_new_replacements_for_sub(bot: aiogram.Bot, list_user_sub: List[int | str]):
+    """Send new replacements in sub from site"""
     from scheduler.private_chat import queue, scheduler, jobs_id
     from handlers.users.message.lessons.get_replacements import create_message_for_replacements_with_site
     scheduler.resume_job(jobs_id[0])

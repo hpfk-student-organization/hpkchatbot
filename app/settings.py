@@ -37,7 +37,7 @@ logger.add(
     logs_target_error,
     format=format_text,
     level='WARNING',
-    rotation="00:00",
+    rotation="1 week",
     compression="zip"
 )
 
