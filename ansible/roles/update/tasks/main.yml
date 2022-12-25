@@ -45,7 +45,7 @@
     definition:
       version: "3.9"
       networks:
-        laravel:
+        net_bot:
           name: net_bot
       services:
         bot:
