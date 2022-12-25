@@ -30,6 +30,8 @@ async def __fish_except(task):
         await task
     except exceptions.TelegramForbiddenError:
         pass
+    except exceptions.TelegramBadRequest:
+        pass
 
 
 scheduler.add_job(
