@@ -55,7 +55,10 @@ async def select_variant_correct_quotes(callback: types.CallbackQuery,
     callback_text = "Loading..."
 
     if type_inl_btn == VerificationQuotesIKb.verification_inline_callback[0]:  # зберігаємо цитату
-        text_quotes, text_teacher = [text.strip() for text in text_quotes_and_teacher.split('-') if text not in '«»-']
+
+        text_split = text_quotes_and_teacher.split('-')
+        fix_bug_text_split = ['-'.join(text_split[:-1]), text_split[-1]] # заборонені символи
+        text_quotes, text_teacher = [text.strip() for text in fix_bug_text_split if text not in '«»-']
         text_quotes: str = text_quotes.strip('«» ')
         if not QuotesTeacher().is_check_exist_teacher(teacher=text_teacher):
             # if teacher not exist
@@ -69,13 +72,13 @@ async def select_variant_correct_quotes(callback: types.CallbackQuery,
             teacher=text_teacher,
             text=text_quotes
         )
-        callback_text = 'Цитата збережена до загального списку',
+        callback_text = 'Цитата збережена до загального списку'
 
     elif type_inl_btn == VerificationQuotesIKb.verification_inline_callback[2]:  # цитата вірна
-        callback_text = 'Сповіщення надіслано: "Цитата збережена"',
+        callback_text = 'Сповіщення надіслано: "Цитата збережена"'
 
     elif type_inl_btn == VerificationQuotesIKb.verification_inline_callback[1]:  # не зберігати
-        callback_text = 'Сповіщення надіслано: "Цитата не збережена"',
+        callback_text = 'Сповіщення надіслано: "Цитата не збережена"'
         save_quotes_text = f"не {save_quotes_text}"
 
     message_text = f"Цитата перевірена.\n" \
@@ -138,5 +141,3 @@ async def reply_feed_back(message: types.Message, bot: aiogram.Bot, **kwargs):
         text=message_text,
         reply_to_message_id=reply_message_id
     )
-
-
