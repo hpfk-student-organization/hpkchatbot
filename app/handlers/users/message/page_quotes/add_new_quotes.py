@@ -170,7 +170,7 @@ async def send_new_quotes_for_verification(message: types.Message, state: FSMCon
             text=message_text
         )
 
-        from handlers import back_to_page_teacher_button
+        from handlers.users.message.back import back_to_page_teacher_button
         await back_to_page_teacher_button(message=message, state=state)
         # Exit with function
         return
