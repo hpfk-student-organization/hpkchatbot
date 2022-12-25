@@ -19,7 +19,7 @@ logs_target_error = abspath(join(base_dir, 'logs', 'error.log'))
 format_text = '{time} {level} {message}'
 __config = {
     "handlers": [
-        {"sink": sys.stdout, "format": format_text, "level":"DEBUG"},
+        {"sink": sys.stdout, "format": format_text, "level":"INFO"},
     ],
     "extra": {"user": "someone"}
 }
