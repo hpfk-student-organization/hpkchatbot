@@ -87,8 +87,8 @@
             redis-server --appendonly yes --replica-read-only no
           volumes:
             - /bot/redis/data:/data
-          ports:
-            - 6379:6379
+#          ports:
+#            - 6379:6379
           networks:
             - net_bot
 
@@ -96,7 +96,7 @@
   community.docker.docker_login:
     state: absent
 
-- name: Fix redis cache
-  ansible.builtin.shell:
-    cmd:
-      echo slaveof no one | nc 127.0.0.1 6379 -q 1
+#- name: Fix redis cache
+#  ansible.builtin.shell:
+#    cmd:
+#      echo slaveof no one | nc 127.0.0.1 6379 -q 1
