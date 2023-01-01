@@ -21,18 +21,6 @@
     owner: git
     group: git
 
-#- name: Create path for redis.conf
-#  ansible.builtin.file:
-#    path: /bot/redis/conf
-#    mode: '0755'
-#    state: directory
-#
-#- name: Create redis conf
-#  ansible.builtin.copy:
-#    content:
-#      "slave-read-only no"
-#    dest: /bot/redis/conf/redis.conf
-
 - name: Login in DockerHub
   community.docker.docker_login:
     username: "{{ docker_hub_login }}"
@@ -98,8 +86,3 @@
   community.docker.docker_prune:
     images: true
     builder_cache: true
-
-#- name: Fix redis cache
-#  ansible.builtin.shell:
-#    cmd:
-#      echo slaveof no one | nc 127.0.0.1 6379 -q 1
