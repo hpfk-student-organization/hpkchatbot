@@ -56,14 +56,11 @@ async def quotes_button(message: types.Message, state: FSMContext,
 async def ads_button(message: types.Message, state: FSMContext):
     """При переході в розділ ads_btn"""
 
-    menu_text = "Що хочеш дізнатися?"
-    from handlers.users.message.lessons.parssing.schedule import read_excel
-    import os
-    # read_excel(os.path.join(config.PATH_TO_FILE_SCHEDULE, '20220825_134745-2.xlsx'))
-    read_excel(os.path.join(config.PATH_TO_FILE_SCHEDULE, 'file.xlsx'))
-    """for i in range(1, 100):
-        print(abc(i), i)
-"""
+    menu_text = "Даний функціонал в процесі розробки. Функція стане доступною згодом"
+#     from handlers.users.message.lessons.parssing.schedule import read_excel
+#     import os
+#     # read_excel(os.path.join(config.PATH_TO_FILE_SCHEDULE, '20220825_134745-2.xlsx'))
+#     read_excel(os.path.join(config.PATH_TO_FILE_SCHEDULE, 'file.xlsx'))
     await message.answer(
         text=menu_text
     )
@@ -94,16 +91,3 @@ async def anonymous_chat_button(message: types.Message, state: FSMContext):
     )
 
     await state.set_state(AnonymousChatStates.main_menu)
-
-
-# @router.message()
-async def welcome(message: types.Message, state: FSMContext):
-    from keyboards.default.default_keyboard import LessonsKb
-    await message.answer(text=message.text, reply_markup=LessonsKb.main_menu())
-    # await state.set_state(ExampleState1.example_state_3)
-    # print(message.chat.type)
-    """#await state.update_data(test=message.text)
-    user_data = await state.get_data()
-    print(user_data.get("test", 0))
-    await message.answer(text=str(user_data.get("test", 0)))"""
-    # await message.delete()

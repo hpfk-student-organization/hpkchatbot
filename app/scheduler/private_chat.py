@@ -3,6 +3,7 @@ import asyncio
 from aiogram import exceptions
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.interval import IntervalTrigger
+from loguru import logger
 
 from settings import scheduler
 
