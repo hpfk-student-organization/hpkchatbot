@@ -1,0 +1,25 @@
+---
+- name: Iptables flush filter
+  ansible.builtin.iptables:
+    flush: yes
+
+- name: "Allow  localhost db"
+  ansible.builtin.iptables:
+    chain: INPUT
+    action: insert
+    protocol: tcp
+    source: 127.0.0.1
+    destination_port: 3306
+    jump: ACCEPT
+    comment: Allow localhost db
+
+- name:  "Allow localhost redis"
+  ansible.builtin.iptables:
+    chain: INPUT
+    action: insert
+    protocol: tcp
+    source:  127.0.0.1
+    destination_port: 6379
+    jump: ACCEPT
+    comment:  Allow localhost redis
+

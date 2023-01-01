@@ -54,8 +54,8 @@
           env_file:
             /bot/.env
           environment:
-            - DB_HOST=mariadb
-            - REDIS_HOST=redis
+#            - DB_HOST=mariadb
+#            - REDIS_HOST=redis
             - TZ=Europe/Kiev
           volumes:
             - /bot/data:/bot/data
@@ -70,7 +70,7 @@
           image:
             mariadb:10.6
           ports:
-            - 3306:3306
+            - 127.0.0.1:3306:3306
           volumes:
             - /bot/db:/var/lib/mysql
           networks:
@@ -87,8 +87,6 @@
             redis-server --appendonly yes --replica-read-only no
           volumes:
             - /bot/redis/data:/data
-#          ports:
-#            - 6379:6379
           networks:
             - net_bot
 

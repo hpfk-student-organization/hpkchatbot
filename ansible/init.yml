@@ -3,5 +3,5 @@
 
 
   roles:
-#    - common
+    - common
     - update
