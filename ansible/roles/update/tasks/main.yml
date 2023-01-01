@@ -55,7 +55,7 @@
             /bot/.env
           environment:
             - DB_HOST=mariadb
-#            - REDIS_HOST=redis
+            - REDIS_HOST=redis
             - TZ=Europe/Kiev
           volumes:
             - /bot/data:/bot/data
