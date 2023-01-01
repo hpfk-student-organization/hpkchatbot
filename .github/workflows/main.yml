@@ -5,6 +5,7 @@ on:
     branches: "main"
 env:
   IMAGE: ${{ secrets.DOCKER_HUB_LOGIN }}/${{ secrets.DOCKER_HUB_REPO }}
+  PREFIX: _${{ github.run_number }}
 
 jobs:
   build-and-push:
@@ -18,18 +19,32 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Get current date
+        id: date
+        run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
+
+      - name: Test with environment variables
+        run: |
+          echo $TAG_NAME - $RELEASE_NAME
+        env:
+          RELEASE_NAME: release-${{ steps.date.outputs.date }}${{ env.PREFIX }}
+
       - name: Login in DockerHub
         run: docker login -u $DOCKER_HUB_LOGIN -p $DOCKER_HUB_PASS docker.io
 
       - name: Build the Docker image
+        env:
+          RELEASE_NAME: release-${{ steps.date.outputs.date }}${{ env.PREFIX }}
         run: |
           docker build . --file Dockerfile --tag $IMAGE:latest
-          docker tag $IMAGE:latest $IMAGE:$(date +'%Y-%m-%d-%H')        
+          docker tag $IMAGE:latest $IMAGE:$RELEASE_NAME      
 
       - name: Push the Docker image
+        env:
+          RELEASE_NAME: release-${{ steps.date.outputs.date }}${{ env.PREFIX }}
         run: |
           docker push $IMAGE:latest
-          docker push $IMAGE:$(date +'%Y-%m-%d-%H') 
+          docker push $IMAGE:$RELEASE_NAME 
 
   update:
     needs: [ build-and-push ]
@@ -60,6 +75,7 @@ jobs:
             - DB_NAME=${{ secrets.DB_NAME }} 
             - DB_USER=${{ secrets.DB_USER }} 
             - DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+            - DB_ROOT=${{ secrets.MYSQL_ROOT_PASSWORD }}
         env:
           ANSIBLE_HOST_KEY_CHECKING: 'false'
           ANSIBLE_DEPRECATION_WARNINGS: 'false'
