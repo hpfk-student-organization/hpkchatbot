@@ -8,8 +8,18 @@
     - "docker"
     - "python3"
     - "python3-pip"
+    - "iptables"
+
+- name: Enable iptables
+  ansible.builtin.service:
+    name: iptables
+    state: started
+    enabled: True
 
 - name: Install docker in python
   ansible.builtin.pip:
     name: docker, docker-compose
     executable: pip3
+
+- name: Config iptables
+  import_tasks: iptables.yml

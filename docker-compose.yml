@@ -32,8 +32,8 @@ services:
       "redis:7.0-alpine"
     volumes:
       - ./redis/data:/data
-    ports:
-      - "6379:6379"
+#    ports:
+#      - "6379:6379"
   phpmyadmin:
     image:
       "phpmyadmin:latest"
