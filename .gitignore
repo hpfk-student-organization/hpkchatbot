@@ -8,3 +8,4 @@ venv/
 mysql/
 data/
 redis/
+ansible/hosts_user.ini
