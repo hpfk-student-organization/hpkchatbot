@@ -76,7 +76,7 @@
           networks:
             - net_bot
           environment:
-            - MYSQL_ROOT_PASSWORD=yes
+            - MYSQL_ROOT_PASSWORD={{ DB_ROOT }}
             - MYSQL_USER={{ DB_USER }}
             - MYSQL_PASSWORD={{ DB_PASSWORD }}
             - MYSQL_DATABASE={{ DB_NAME }}
@@ -93,6 +93,11 @@
 - name: Log out of DockerHub
   community.docker.docker_login:
     state: absent
+
+- name: Clear old docker images
+  community.docker.docker_prune:
+    images: true
+    builder_cache: true
 
 #- name: Fix redis cache
 #  ansible.builtin.shell:
