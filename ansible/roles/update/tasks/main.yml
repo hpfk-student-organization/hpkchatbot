@@ -70,7 +70,7 @@
           image:
             mariadb:10.6
           ports:
-            - 127.0.0.1:3306:3306
+            - 3306:3306
           volumes:
             - /bot/db:/var/lib/mysql
           networks:
