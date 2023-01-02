@@ -36,7 +36,7 @@ logger.add(
 logger.add(
     logs_target_error,
     format=format_text,
-    level='WARNING',
+    level='ERROR',
     rotation="1 week",
     compression="zip"
 )

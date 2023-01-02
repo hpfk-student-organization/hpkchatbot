@@ -1,10 +1,10 @@
-- name: Create path
-  ansible.builtin.file:
-    path: /bot
-    owner: git
-    group: git
-    mode: '0755'
-    state: directory
+#- name: Create path
+#  ansible.builtin.file:
+#    path: /bot
+#    owner: git
+#    group: git
+#    mode: '0755'
+#    state: directory
 
 - name: Copy .env
   ansible.builtin.copy:
