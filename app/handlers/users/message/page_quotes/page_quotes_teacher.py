@@ -140,7 +140,11 @@ async def last_page_button(message: types.Message, state: FSMContext):
 async def click_to_teacher_button(message: types.Message, state: FSMContext):
     """Натиснемо на кнопку з викладачем"""
     name_teacher_split: list = message.text.split(' ')
-    name_teacher = name_teacher_split[1]
+
+    if len(name_teacher_split)==2:
+        name_teacher = name_teacher_split[1]
+    else:
+        name_teacher = name_teacher_split[0]
     # отримуємо цитати, яку видалили. Список перед тим був в типом set - тобто не впорядкований
     list_quotes = QuotesTeacher().select_all_quotes_with_teacher(name_teacher)
 
