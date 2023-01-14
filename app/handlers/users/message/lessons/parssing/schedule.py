@@ -13,6 +13,7 @@ from pandas import ExcelFile
 
 from utils.module.MyType import LinkedList
 from utils.mysql import Schedule
+from utils.tools import abc
 
 
 def is_null_column(value: dict.items) -> bool:
@@ -254,7 +255,9 @@ def save_line(column_json, key_column_str, json_table_k, key, page_of_json, room
     teacher = column_json.get(key_column_str)  # отримуємо назву викладача
 
     __key = json_table_k.next(key)  # отримуємо ключ наступного стовпця
-    room = page_of_json[str(__key)].get(key_column_str)  # отримуємо номер групи
+    room = None
+    if __key is not None:
+        room = page_of_json[str(__key)].get(key_column_str)  # отримуємо номер групи
 
     teacher_1, teacher_2, room_1, room_2 = unzip_teacher(
         teacher)  # якщо комірка має додаткову інформацію
@@ -293,6 +296,7 @@ def read_excel(path_to_file):
     sheet_tag = ""
     key_tag = ""
     key_column_tag = ""
+
     try:
         for sheet in range(len(excel_file.xls_file.sheet_names)):  # проходимося по кожній сторінці
             sheet_tag = sheet
@@ -305,9 +309,10 @@ def read_excel(path_to_file):
 
             json_table_k: LinkedList[int] = LinkedList(
                 map(int, list(json_table_k))
-            )  # конвертуємо в інший тип, для можливості отримання наступного елементу
+            )  # конвертуємо в інший тип, для можливості отримання наступного елементу. Зберігає заповнені стовпчики
             for key in json_table_k:  # key column in tables
                 key_tag = key
+
                 column_json: dict[str] = page_of_json.get(str(key))  # отримуємо json з колонкою розкладу, для аналізу
                 if column_json is None:  # якщо у нас такого ключа немає у списку, пропускаємо даний ключ key
                     continue
@@ -323,6 +328,9 @@ def read_excel(path_to_file):
                 for key_column in json_column_k:  # проходимося по кожному рядку в колонці
                     key_column_tag = key_column
                     key_column_str = str(key_column)
+
+                    # if str(key_column_str) == "12" and str(sheet_tag) == str(4):
+                    #    pass
 
                     if key_column_str in lesson_schema.keys():  # отримуємо інформацію про години пар
                         lesson_schema_k = int(key_column_str)
@@ -375,11 +383,16 @@ def read_excel(path_to_file):
         end = perf_counter()
         logger.debug("Total time {0:.2f}s".format(end - begin))
 
-        save_new_schedule_in_db(result_structure)
+
     except Exception as e:
-        msg = "Sheet - {0}, column - {1}, line - {2}".format(sheet_tag, key_tag, key_column_tag)
-        logger.warning("See coordinate on :{0}".format(msg))
+        msg = "Sheet - {0}, column - {1}({2}), line - {3}({4})".format(
+            int(sheet_tag + 1), key_tag + 1, abc(key_tag + 1), key_column_tag, key_column_tag + 6)
+        logger.warning("See coordinate on : {0}".format(msg))
+        logger.warning("Error :{0}".format(e))
         return msg
+
+    save_new_schedule_in_db(result_structure)
+
 
 
 def save_new_schedule_in_db(result_structure: list[tuple[str, ...]]):

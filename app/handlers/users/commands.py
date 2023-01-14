@@ -81,6 +81,7 @@ async def commands_show_private(message: types.Message):
     )
 
 
+
 @router.message(
     Command(commands='setting_replacements'),
     StateFilter(*__state_for_command)
@@ -128,7 +129,6 @@ async def command_help(message: types.Message):
     Функція інформації про бота
 
     @param message:
-    @param state:
     @return:
     """
     message_text = "Привіт.\n" \
