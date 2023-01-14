@@ -57,10 +57,10 @@ async def ads_button(message: types.Message, state: FSMContext):
     """При переході в розділ ads_btn"""
 
     menu_text = "Даний функціонал в процесі розробки. Функція стане доступною згодом"
-#     from handlers.users.message.lessons.parssing.schedule import read_excel
-#     import os
-#     # read_excel(os.path.join(config.PATH_TO_FILE_SCHEDULE, '20220825_134745-2.xlsx'))
-#     read_excel(os.path.join(config.PATH_TO_FILE_SCHEDULE, 'file.xlsx'))
+    from handlers.users.message.lessons.parssing.schedule import read_excel
+    import os
+    # read_excel(os.path.join(config.PATH_TO_FILE_SCHEDULE, 'Розклад _ІІ семестр 2022_2023 н.р..xlsx'))
+    # read_excel(os.path.join(config.PATH_TO_FILE_SCHEDULE, 'file.xlsx'))
     await message.answer(
         text=menu_text
     )

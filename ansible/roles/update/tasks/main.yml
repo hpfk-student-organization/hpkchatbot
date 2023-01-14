@@ -32,9 +32,11 @@
     pull: true
     definition:
       version: "3.9"
+
       networks:
-        net_bot:
-          name: net_bot
+        bot_network:
+          name: hpkchatbot_network
+
       services:
         bot:
           image:
@@ -42,14 +44,14 @@
           env_file:
             /bot/.env
           environment:
+            - TZ=Europe/Kiev
             - DB_HOST=mariadb
             - REDIS_HOST=redis
-            - TZ=Europe/Kiev
           volumes:
             - /bot/data:/bot/data
             - /bot/logs:/bot/logs
           networks:
-            - net_bot
+            - bot_network
           depends_on:
             - mariadb
             - redis
@@ -62,12 +64,13 @@
           volumes:
             - /bot/db:/var/lib/mysql
           networks:
-            - net_bot
+            - bot_network
           environment:
             - MYSQL_ROOT_PASSWORD={{ DB_ROOT }}
             - MYSQL_USER={{ DB_USER }}
             - MYSQL_PASSWORD={{ DB_PASSWORD }}
             - MYSQL_DATABASE={{ DB_NAME }}
+
         redis:
           image:
             redis:7.0-alpine
@@ -76,7 +79,7 @@
           volumes:
             - /bot/redis/data:/data
           networks:
-            - net_bot
+            - bot_network
 
 - name: Log out of DockerHub
   community.docker.docker_login:
