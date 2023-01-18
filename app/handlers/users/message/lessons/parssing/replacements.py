@@ -134,33 +134,33 @@ async def parsing_replacements(html_code: Optional[str], bot: aiogram.Bot):
     info_of_replacements = Replacements().get_info_replacements_with_table()
     if len(info_of_replacements):
         last_day_replacements = info_of_replacements[0]
-    if len(information_for_replacements) and information_for_replacements[0] == last_day_replacements:
-        # logger.debug('Not found new tomorrow replacements')
-        return
+    if len(information_for_replacements) and not information_for_replacements[0] == last_day_replacements:
+        logger.info('Found new tomorrow replacements ')
+        Replacements().clear_all_table_with_replacements()
+        logger.info('Clear old replacements')
 
-    logger.info('Found new tomorrow replacements ')
-    Replacements().clear_all_table_with_replacements()
-    logger.info('Clear old replacements')
+        # main_table_with_replacements_tomorrow: list = list(map(__get_text, list_with_tag_about_replacements))[6:]
 
-    # main_table_with_replacements_tomorrow: list = list(map(__get_text, list_with_tag_about_replacements))[6:]
+        # if main_table_with_replacements_tomorrow.count(new_replacements):
+        #    main_table_with_replacements_tomorrow.remove(new_replacements)
 
-    # if main_table_with_replacements_tomorrow.count(new_replacements):
-    #    main_table_with_replacements_tomorrow.remove(new_replacements)
+        news_replacements = list(map(__replace_to_space, __get_news_replacements(soup)))
+        main_table_with_replacements_tomorrow = list(
+            map(__replace_to_space, __get_main_table_with_replacements_tomorrow(soup))
+        )
+        main_table_with_replacements_tomorrow = __formation_main_table_replacement(
+            main_table_with_replacements_tomorrow)
 
-    news_replacements = list(map(__replace_to_space, __get_news_replacements(soup)))
-    main_table_with_replacements_tomorrow = list(
-        map(__replace_to_space, __get_main_table_with_replacements_tomorrow(soup))
-    )
-    main_table_with_replacements_tomorrow = __formation_main_table_replacement(main_table_with_replacements_tomorrow)
+        logger.debug('Start save information of replacements in databases')
+        Replacements().insert_all_replacements_in_table(all_replacements=main_table_with_replacements_tomorrow)
+        Replacements().insert_info_replacements_in_table(info_of_replacements=information_for_replacements)
+        Replacements().insert_news_replacements_in_table(news_of_replacements=news_replacements)
+        logger.info('Save finish information')
 
-    logger.debug('Start save information of replacements in databases')
-    Replacements().insert_all_replacements_in_table(all_replacements=main_table_with_replacements_tomorrow)
-    Replacements().insert_info_replacements_in_table(info_of_replacements=information_for_replacements)
-    Replacements().insert_news_replacements_in_table(news_of_replacements=news_replacements)
-    logger.info('Save finish information')
+        list_user_sub = Replacements().get_subscription_who_get_replacements_from_site()
+        await send_new_replacements_for_sub(bot=bot, list_user_sub=list_user_sub)
 
-    list_user_sub = Replacements().get_subscription_who_get_replacements_from_site()
-    await send_new_replacements_for_sub(bot=bot, list_user_sub=list_user_sub)
+    # logger.debug('Not found new tomorrow replacements')
 
 
 async def send_new_replacements_for_sub(bot: aiogram.Bot, list_user_sub: List[int | str]):
