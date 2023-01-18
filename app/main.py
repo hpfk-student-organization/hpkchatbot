@@ -27,8 +27,10 @@ async def on_startup():
     logger.info('Bot start - OK')
 
     from utils.tools import check_and_create_dir
-    list_path=[config.PATH_TO_PHOTO_REPLACEMENTS,config.PATH_TO_PHOTO_TIME_BOOK, config.PATH_TO_FILE_SCHEDULE]
+    list_path = [config.PATH_TO_PHOTO_REPLACEMENTS, config.PATH_TO_PHOTO_TIME_BOOK, config.PATH_TO_FILE_SCHEDULE]
     check_and_create_dir(list_path)
+
+    await bot.send_message(chat_id=config.ID_GROUP_ADMIN, text='Start bot - OK.')
 
 
 @logger.catch()
