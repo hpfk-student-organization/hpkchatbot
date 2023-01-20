@@ -13,6 +13,7 @@ __seconds = 15  # через скільки шукати
 
 
 async def trigger_for_passing_replacements(_bot: aiogram.Bot):
+    """Трігер для перевірки наявності нових змін"""
     from utils.module.webTool import WebTool
     request = WebTool(url=config.URL_REPLACEMENTS)
     html_content = await request.get_html_content()
