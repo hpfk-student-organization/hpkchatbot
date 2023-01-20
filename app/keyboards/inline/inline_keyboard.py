@@ -3,11 +3,14 @@ from typing import Optional
 
 from aiogram.filters.callback_data import CallbackData
 from aiogram.types import InlineKeyboardMarkup
+from memoization import cached
 
 from keyboards.inline.base import BaseButton, _inline_builder
 from utils.module.keyboard import zip_adjust
 from utils.module.language import UA_RUS_EN
 from utils.mysql import QuotesTeacher, Schedule
+
+TTL_CACHE = 12 * 60 * 60
 
 
 class SendNewQuotesCBData(CallbackData, prefix='SendNQts'):
@@ -426,6 +429,7 @@ class ScheduleIKb(BaseButton):
             adjust=zip_adjust(1)
         ).as_markup(resize_keyboard=True)
 
+
     def my_selected_group(self, select_weekday: str = None, click_num_s: bool = True):
         """
         Коли користувач вибрав групу або день розкладу
@@ -471,6 +475,7 @@ class ScheduleIKb(BaseButton):
             callback_data_btn_args=callback_data_list,
             adjust=adjust
         ).as_markup(resize_keyboard=True)
+
 
     def another_group(
             self, all_group: tuple | list,
@@ -543,7 +548,6 @@ class ScheduleIKb(BaseButton):
             ])
             adjust = zip_adjust(1, 1, *(5,) * (line_pos_btn + 1), 1, 5)
 
-
             if select_weekday is not None:
                 text_btn_list = [self.numerator_inl_btn[int(not click_num_s)], *text_btn_list]
                 _callback_data = ScheduleAnotherGroupCBData(
@@ -570,6 +574,7 @@ class ForStudentIKb(BaseButton):
     }
 
     @staticmethod
+    @cached(ttl=TTL_CACHE, max_size=256)
     def first_letter(list_letter=Optional[list]):
         from utils.tools import sort
         text_btn_list = sort(list_letter, key_list=UA_RUS_EN)
@@ -583,6 +588,7 @@ class ForStudentIKb(BaseButton):
         ).as_markup(resize_keyboard=True)
 
     def list_teacher(self, letter: str):
+
         text_btn_list = sorted(Schedule().get_teacher_from_first_letter(letter=letter))
         callback_data_list = [FoundTeacherCBData(
             type_inl_btn='teacher', letter=letter, teacher=teacher, level=2) for teacher in text_btn_list]
@@ -593,5 +599,5 @@ class ForStudentIKb(BaseButton):
         return _inline_builder(
             text_btn_args=text_btn_list,
             callback_data_btn_args=callback_data_list,
-            adjust=zip_adjust(*(2,) * ((len_list - 2) // 2), *(1,)*((len_list - 2) % 2), 1 )
+            adjust=zip_adjust(*(2,) * ((len_list - 2) // 2), *(1,) * ((len_list - 2) % 2), 1)
         ).as_markup(resize_keyboard=True)

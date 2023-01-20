@@ -5,6 +5,7 @@ from aiogram import types
 from aiogram.filters import StateFilter, Text
 from aiogram.types import CallbackQuery
 from loguru import logger
+from memoization import cached, CachingAlgorithmFlag
 
 import config
 from decorator.cache import cache
@@ -98,10 +99,10 @@ async def inline_menu_get_replacements(query: CallbackQuery, callback_data: Less
 
 
 # @lru_cache
-@cache(60)
+# @cache(60)
+@cached(ttl=60 * 5, max_size=256, algorithm=CachingAlgorithmFlag.LRU)
 def create_message_for_replacements_with_site(name_group: Optional[str | None]) -> Optional[str]:
     """Отримання замін з БД, які на сайті"""
-
     info_of_replacements = Replacements().get_info_replacements_with_table()
 
     news_of_replacements = Replacements().get_news_replacements_with_table()
