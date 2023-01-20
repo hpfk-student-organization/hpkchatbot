@@ -25,8 +25,7 @@ async def search_teacher_btn(message: types.Message, **kwargs):
             "Попробуй перевірити доступність функції через деякий час."
         )
 
-
-    reply_markup=ForStudentIKb().first_letter(list_letter=list_letter)
+    reply_markup = ForStudentIKb().first_letter(list_letter=list_letter)
 
     await message.answer(
         text=message_text,
@@ -92,18 +91,18 @@ async def get_information_of_teacher(query: CallbackQuery, teacher: str, **kwarg
 
     for item in information:
         key = item.pop('day')
-        len_result = len(result.get(key,[]))
+        len_result = len(result.get(key, []))
         if not len_result:
-            result[key]={len_result:item}
+            result[key] = {len_result: item}
             continue
-        result[key].update({len_result:item})
+        result[key].update({len_result: item})
 
     message_text = f'Ймовірне розташування викладача\n«{teacher}»:\n'
     for day in day_list:
         if day not in result.keys():
             continue
 
-        message_text+='\n<b>{day}</b>:\n'.format(day=day)
+        message_text += '\n<b>{day}</b>:\n'.format(day=day)
         for num_lesson in number_lesson_list:
             for key in result[day].keys():
                 if not result[day][key]['number'] == num_lesson:
@@ -111,16 +110,15 @@ async def get_information_of_teacher(query: CallbackQuery, teacher: str, **kwarg
                 start_time = str(result[day][key]['start_time'])
                 end_time = str(result[day][key]['end_time'])
                 time = '{0}-{1}'.format(
-                    datetime.datetime.strptime(start_time,'%H:%M:%S').strftime('%H:%M'),
-                    datetime.datetime.strptime(end_time,'%H:%M:%S').strftime('%H:%M'))
+                    datetime.datetime.strptime(start_time, '%H:%M:%S').strftime('%H:%M'),
+                    datetime.datetime.strptime(end_time, '%H:%M:%S').strftime('%H:%M'))
                 group = result[day][key]['name_group']
                 lesson = result[day][key]['name']
                 room = result[day][key]['room']
                 message_text += '{space}{num_lesson} ({time}): \t{group} \t«{lesson}...» \t<code>{room}</code>\n'.format(
-                    space=4*' ',
+                    space=4 * ' ',
                     num_lesson=num_lesson, time=time, group=group, lesson=lesson[:8], room=room
                 )
-
 
     await query.message.edit_text(
         text=message_text,
