@@ -4,6 +4,7 @@ from aiogram import types
 from aiogram.filters import StateFilter, Text
 from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery
+from memoization import cached, CachingAlgorithmFlag
 
 from keyboards.default import LessonsKb
 from keyboards.inline.inline_keyboard import ScheduleIKb, ScheduleMMCBData, ScheduleMyGroupCBData, \
@@ -80,26 +81,16 @@ async def inline_my_group_select_day(query: CallbackQuery, callback_data: Schedu
     )
 
 
-def select_day_schedule(day: int, name_group: str, num_s: bool = True) -> str:
-    """
-    Збирає розклад, для вказаного дня
-
-    @return: Готовий розклад на вибраний день
-    """
-
-    day_list = ('Понеділок', 'Вівторок', 'Середа', 'Четвер', 'П\'ятниця')
-    number_lesson_list = ('1-2', '3-4', '5-6', '7-8', '9-10', '11-12', '13-14')
-    error_message = 'Розклад тимчасово не доступний'
-
-    type_date = 'Чисельник' if num_s else 'Знаменник'
-    title_day = day_list[day]
-    information: list[dict] = Schedule().get_information_of_group(name_group=name_group, day=title_day)
-
+@cached(max_size=256)
+def __create_message(name_group, title_day, type_date, information, number_lesson_list, num_s):
     structure_message = '{name_group} - {day}({type_week}):\n'.format(
         name_group=name_group, day=title_day, type_week=type_date
     )
     _tmp = ''
-    tmp_structure_message = ''
+
+    if not len(information):
+        return '{0}\nРозклад відсутній'.format(structure_message)
+
     for item in information:
         number = item['number']
         start_time = str(item['start_time'])
@@ -111,10 +102,9 @@ def select_day_schedule(day: int, name_group: str, num_s: bool = True) -> str:
         teacher = item['teacher']
         if teacher is None:
             teacher = 'Викладач не вказаний'
-        room:str = item['room']
+        room: str = item['room']
         if not room:
-            room='Не вказано'
-
+            room = 'Не вказано'
 
         _num_s = item['num_s']
 
@@ -133,6 +123,23 @@ def select_day_schedule(day: int, name_group: str, num_s: bool = True) -> str:
             )
     return structure_message
 
+
+def select_day_schedule(day: int, name_group: str, num_s: bool = True) -> str:
+    """
+    Збирає розклад, для вказаного дня
+
+    @return: Готовий розклад на вибраний день
+    """
+
+    day_list = ('Понеділок', 'Вівторок', 'Середа', 'Четвер', 'П\'ятниця')
+    number_lesson_list = ('1-2', '3-4', '5-6', '7-8', '9-10', '11-12', '13-14')
+    error_message = 'Розклад тимчасово не доступний'
+
+    type_date = 'Чисельник' if num_s else 'Знаменник'
+    title_day = day_list[day]
+    information: list[dict] = Schedule().get_information_of_group(name_group=name_group, day=title_day)
+
+    return __create_message(name_group, title_day, type_date, information, number_lesson_list, num_s)
 
 #
 #   Секція - Інші групи
