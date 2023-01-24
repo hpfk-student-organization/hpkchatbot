@@ -1,5 +1,5 @@
 import math
-from typing import Optional
+from typing import Optional, List
 
 from aiogram.filters.callback_data import CallbackData
 from aiogram.types import InlineKeyboardMarkup
@@ -406,7 +406,7 @@ class ScheduleIKb(BaseButton):
     }
 
     day_my_group_inl_btn: tuple = ('Пн.', 'Вт.', 'Ср.', 'Чт.', 'Пт.')
-    day_my_group_inline_callback: list = [str(i) for i in range(len(day_my_group_inl_btn))]
+    day_my_group_inline_callback: list = list(map(str, range(len(day_my_group_inl_btn))))
     numerator_inl_btn = ('Знаменник', 'Чисельник')
     numerator_inline_callback = (False, True)
 
@@ -414,21 +414,56 @@ class ScheduleIKb(BaseButton):
 
     def __init__(self, name_group: str):
         self.name_group = name_group
+
+        basic_text_btn: list = list(self.main_btn_inl_btn.values())
+        basic_text_btn[0] = '{0} {1}'.format(
+            basic_text_btn[0], '- невказана' if name_group is None else name_group)
+
+        self.basic_text_btn = basic_text_btn
         self.callback_data_list = [ScheduleMMCBData(
             type_inl_btn=types, my_group=name_group) for types in self.main_btn_inline_callback]
 
     def main_btn(self):
-        name_group = self.name_group
-        text_btn_list = list(self.main_btn_inl_btn.values())
-        text_btn_list[0] = '{0} {1}'.format(
-            text_btn_list[0], '- невказана' if name_group is None else name_group)
+        """
+        Головна клавіатура
 
+        @return:
+        """
         return _inline_builder(
-            text_btn_args=text_btn_list,
+            text_btn_args=self.basic_text_btn,
             callback_data_btn_args=self.callback_data_list,
             adjust=zip_adjust(1)
         ).as_markup(resize_keyboard=True)
 
+    @staticmethod
+    def __select_btn(btn: str, l_prefix='👉 ', r_prefix=' 👈') -> str:
+        title_text = l_prefix + '{}' + r_prefix
+        return title_text.format(btn)
+
+    def __create_callback_my_group(self, type_inl_btn, weekday, num_s) -> ScheduleMyGroupCBData:
+        return ScheduleMyGroupCBData(
+            my_group=self.name_group,
+            type_inl_btn=type_inl_btn,
+            weekday=weekday,
+            num_s=num_s
+        )
+
+    def __select_weekday_btn_for_my_group(
+            self, text_btn_list: list, click_num_s: bool, name_group: str, select_weekday: str,
+            callback_data_list: List[ScheduleMyGroupCBData],
+            adjust: list
+    ) -> (List[str], List[ScheduleMyGroupCBData], list):
+        """Генерує кнопки з вибором дня"""
+        text_btn_list = [self.numerator_inl_btn[int(not click_num_s)], *text_btn_list]
+
+        callback_data = self.__create_callback_my_group(
+            self.day_my_group_type_inline_callback[0], select_weekday, not click_num_s
+        )
+        callback_data_list = [callback_data, *callback_data_list]
+
+        adjust = zip_adjust(1, *adjust)
+
+        return text_btn_list, callback_data_list, adjust
 
     def my_selected_group(self, select_weekday: str = None, click_num_s: bool = True):
         """
@@ -437,38 +472,30 @@ class ScheduleIKb(BaseButton):
         @return:
         """
         name_group = self.name_group
-        title_text = '👉 ' + '{0} {1}' + ' 👈'
-
-        __main_btn_inl_btn = list(self.main_btn_inl_btn.values())
-        __main_btn_inline_callback = self.main_btn_inline_callback
+        basic_text_btn = self.basic_text_btn
+        basic_callback_data_list = self.callback_data_list
 
         # збираємо базову структуру кнопок, до моменту вибору дня
-        text_btn_list = \
-            [__main_btn_inl_btn[0], *self.day_my_group_inl_btn, __main_btn_inl_btn[1]]
-        text_btn_list[0] = title_text.format(text_btn_list[0], name_group)
+        text_btn_list = [
+            self.__select_btn(basic_text_btn[0]), *self.day_my_group_inl_btn, basic_text_btn[-1]
+        ]
 
         callback_data_list = [
-            ScheduleMyGroupCBData(
-                my_group=name_group,
-                type_inl_btn=self.day_my_group_type_inline_callback[0],
-                weekday=weekday,
-                num_s=click_num_s
-            ) for weekday in self.day_my_group_inline_callback]
+            self.__create_callback_my_group(
+                self.day_my_group_type_inline_callback[0], weekday, click_num_s)
+            for weekday in self.day_my_group_inline_callback
+        ]
+        callback_data_list = [basic_callback_data_list[0], *callback_data_list, basic_callback_data_list[-1]]
 
-        callback_data_list = [self.callback_data_list[0], *callback_data_list, self.callback_data_list[1]]
         adjust = zip_adjust(1, 5, 1)
 
         if select_weekday is not None:
-            text_btn_list = [self.numerator_inl_btn[int(not click_num_s)], *text_btn_list]
-
-            _callback_data = ScheduleMyGroupCBData(
-                my_group=name_group,
-                type_inl_btn=self.day_my_group_type_inline_callback[0],
-                weekday=select_weekday,
-                num_s=not click_num_s
+            text_btn_list, callback_data_list, adjust = self.__select_weekday_btn_for_my_group(
+                text_btn_list=text_btn_list,
+                click_num_s=click_num_s, name_group=name_group, select_weekday=select_weekday,
+                callback_data_list=callback_data_list,
+                adjust=adjust
             )
-            callback_data_list = [_callback_data, *callback_data_list]
-            adjust = zip_adjust(1, *adjust)
 
         return _inline_builder(
             text_btn_args=text_btn_list,
@@ -476,89 +503,106 @@ class ScheduleIKb(BaseButton):
             adjust=adjust
         ).as_markup(resize_keyboard=True)
 
+    def __create_callback_another_group(
+            self, type_inl_btn, select_my_g, weekday=None, num_s=None,
+    ) -> ScheduleAnotherGroupCBData:
+        return ScheduleAnotherGroupCBData(
+            my_group=self.name_group,
+            type_inl_btn=type_inl_btn,
+            select_my_g=select_my_g,
+            weekday=weekday,
+            num_s=num_s,
+
+        )
+
+    def __create_kb_with_select_group(
+            self, text_btn_list, callback_data_list, adjust,
+            select_name_group, type_inl_btn, click_num_s, select_weekday
+    ) -> (List[str], List[ScheduleMyGroupCBData], list):
+        # розділяємо категорії btn на дві групи: базові кнопки, та кнопки із назвами груп
+        basic_btn, another_btn = text_btn_list[:2], text_btn_list[2:]
+        basic_callback_btn, another_callback_btn = callback_data_list[:2], callback_data_list[2:]
+
+        pos_btn = another_btn.index(select_name_group)  # отримуємо позицію кнопки
+        line_pos_btn = pos_btn // 5  # на якій лінії, кнопка
+        add_btn = 6 - pos_btn % 5  # скільки кнопок потрібно додати, щоб опинитися на наступному рядку
+
+        text_btn_list = [
+            *basic_btn,
+            *another_btn[:pos_btn],
+            *another_btn[pos_btn + 1:pos_btn + add_btn],
+            select_name_group,
+            *self.day_my_group_inl_btn,
+            *another_btn[pos_btn + add_btn:]
+        ]
+
+        # Генеруємо callback для кнопок
+        select_group_callback_data = self.__create_callback_another_group(
+            type_inl_btn=type_inl_btn, select_my_g=select_name_group
+        )
+        day_callback_data_list = [self.__create_callback_another_group(
+            type_inl_btn=type_inl_btn, select_my_g=select_name_group, weekday=weekday, num_s=click_num_s
+        ) for weekday in self.day_my_group_inline_callback]
+
+        callback_data_list = [
+            *basic_callback_btn,
+            *another_callback_btn[:pos_btn],
+            *another_callback_btn[pos_btn + 1:pos_btn + add_btn],
+            select_group_callback_data,
+            *day_callback_data_list,
+            *another_callback_btn[pos_btn + add_btn:]
+        ]
+        adjust = zip_adjust(1, 1, *(5,) * (line_pos_btn + 1), 1, 5)
+
+        if select_weekday is not None:
+            type_week_text_btn = self.numerator_inl_btn[int(not click_num_s)]
+            type_week_callback_data = self.__create_callback_another_group(
+                type_inl_btn=self.day_my_group_type_inline_callback[0],
+                weekday=select_weekday, num_s=not click_num_s, select_my_g=select_name_group
+            )
+            text_btn_list = [type_week_text_btn, *text_btn_list]
+            callback_data_list = [type_week_callback_data, *callback_data_list]
+            adjust = (1, *adjust)
+
+        return text_btn_list, callback_data_list, adjust
 
     def another_group(
             self, all_group: tuple | list,
             select_name_group: str = None, select_weekday: str = None, click_num_s: bool = True):
         """
-        Клавіатура із усіма групами та вибраною групою
+        Клавіатура з усіма групами та вибраною групою
 
-        @param select_name_group:
-        @param click_num_s:
-        @param select_weekday:
-        @param all_group:
+        @param select_name_group: вибрана група
+        @param click_num_s: тип тижня - Чисельник/Знаменник
+        @param select_weekday: день тижня. Пн - Пт
+        @param all_group: Список усіх груп в БД
         @return:
         """
         name_group = self.name_group
-        title_text = '👉 ' + '{0}' + ' 👈'
-        type_inl_btn = self.main_btn_inline_callback[1]
+        basic_text_btn = self.basic_text_btn
+        basic_callback_data_list = self.callback_data_list
 
-        __main_btn_inl_btn = list(self.main_btn_inl_btn.values())
-        __main_btn_inline_callback = self.main_btn_inline_callback
+        type_inl_btn = self.main_btn_inline_callback[1]
 
         list_name_group = all_group  # get list group with db
 
+        # створюємо базову структуру клавіатури
         text_btn_list = [
-            __main_btn_inl_btn[0],
-            title_text.format(__main_btn_inl_btn[1]),
-            *list_name_group
+            basic_text_btn[0], self.__select_btn(basic_text_btn[-1]), *list_name_group
         ]
 
-        text_btn_list[0] = '{0} {1}'.format(
-            text_btn_list[0], '- невказана' if name_group is None else name_group)
-
-        callback_data_list = [*self.callback_data_list]
-        callback_data_list += [
+        group_callback_data_list = [
             ScheduleAnotherGroupCBData(
                 my_group=name_group, type_inl_btn=type_inl_btn, select_my_g=group) for group in list_name_group]
+
+        callback_data_list = [*basic_callback_data_list, *group_callback_data_list]
+
         adjust = zip_adjust(1, 1, 5)
 
         if select_name_group is not None:  # якщо натиснули на назву групи
-
-            pos_btn = list_name_group.index(select_name_group)  # отримуємо позицію кнопки
-            line_pos_btn = pos_btn // 5  # на якій лінії, кнопка
-            add_btn = 6 - pos_btn % 5  # скільки кнопок потрібно додати, щоб опинитися на наступному рядку
-
-            text_btn_list = [__main_btn_inl_btn[0], title_text.format(__main_btn_inl_btn[1])]
-            text_btn_list.extend([
-                *list_name_group[:pos_btn],
-                *list_name_group[pos_btn + 1:pos_btn + add_btn],
-                list_name_group[pos_btn],
-                *self.day_my_group_inl_btn,
-                *list_name_group[pos_btn + add_btn:]
-            ])
-
-            _all_group_callback_data_list = [ScheduleAnotherGroupCBData(
-                my_group=name_group, type_inl_btn=type_inl_btn, select_my_g=group)
-                for group in list_name_group]
-            _click_group_callback_data = [ScheduleAnotherGroupCBData(
-                my_group=name_group, type_inl_btn=type_inl_btn, select_my_g=select_name_group)]
-
-            day_callback_data_list = [ScheduleAnotherGroupCBData(
-                my_group=name_group, type_inl_btn=type_inl_btn, select_my_g=select_name_group, weekday=weekday,
-                num_s=click_num_s) for weekday in self.day_my_group_inline_callback]
-
-            callback_data_list = self.callback_data_list
-            callback_data_list.extend([
-                *_all_group_callback_data_list[:pos_btn],
-                *_all_group_callback_data_list[pos_btn + 1:pos_btn + add_btn],
-                *_click_group_callback_data,
-                *day_callback_data_list,
-                *_all_group_callback_data_list[pos_btn + add_btn:]
-            ])
-            adjust = zip_adjust(1, 1, *(5,) * (line_pos_btn + 1), 1, 5)
-
-            if select_weekday is not None:
-                text_btn_list = [self.numerator_inl_btn[int(not click_num_s)], *text_btn_list]
-                _callback_data = ScheduleAnotherGroupCBData(
-                    my_group=name_group,
-                    type_inl_btn=self.day_my_group_type_inline_callback[0],
-                    weekday=select_weekday,
-                    num_s=not click_num_s,
-                    select_my_g=select_name_group
-                )
-                callback_data_list = [_callback_data, *callback_data_list]
-                adjust = (1, *adjust)
+            text_btn_list, callback_data_list, adjust = self.__create_kb_with_select_group(
+                text_btn_list, callback_data_list, adjust, select_name_group, type_inl_btn, click_num_s, select_weekday
+            )
 
         return _inline_builder(
             text_btn_args=text_btn_list,
@@ -588,7 +632,6 @@ class ForStudentIKb(BaseButton):
         ).as_markup(resize_keyboard=True)
 
     def list_teacher(self, letter: str):
-
         text_btn_list = sorted(Schedule().get_teacher_from_first_letter(letter=letter))
         callback_data_list = [FoundTeacherCBData(
             type_inl_btn='teacher', letter=letter, teacher=teacher, level=2) for teacher in text_btn_list]
