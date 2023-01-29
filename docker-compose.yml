@@ -36,6 +36,8 @@ services:
       - MYSQL_DATABASE=${DB_NAME}
     networks:
       - bot_network
+    env_file:
+      - app/.env
 
   redis:
     image:

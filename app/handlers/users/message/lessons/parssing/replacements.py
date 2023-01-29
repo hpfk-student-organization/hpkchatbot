@@ -1,4 +1,6 @@
 import datetime
+
+from aiogram import exceptions
 from loguru import logger
 import re
 from typing import Optional, List
@@ -163,11 +165,23 @@ async def parsing_replacements(html_code: Optional[str], bot: aiogram.Bot):
     # logger.debug('Not found new tomorrow replacements')
 
 
+async def send_message(bot: aiogram.Bot, chat_id, text):
+    try:
+        await bot.send_message(
+            chat_id=chat_id,
+            text=text
+        )
+        return True
+    except exceptions.TelegramForbiddenError:
+        return exceptions.TelegramForbiddenError
+    except exceptions.TelegramBadRequest:
+        return exceptions.TelegramBadRequest
+
+
 async def send_new_replacements_for_sub(bot: aiogram.Bot, list_user_sub: List[int | str]):
     """Send new replacements in sub from site"""
-    from scheduler.private_chat import queue, scheduler, jobs_id
+    from scheduler.private_chat import queue, private_chat_tm
     from handlers.users.message.lessons.get_replacements import create_message_for_replacements_with_site
-    scheduler.resume_job(jobs_id[0])
     for user_id in list_user_sub:
         name_group = Replacements().get_subscription_name_group(telegram_id=user_id)
 
@@ -176,12 +190,15 @@ async def send_new_replacements_for_sub(bot: aiogram.Bot, list_user_sub: List[in
         title_text = 'Нові заміни, станом на'
 
         await queue.put(
-            bot.send_message(
+            send_message(
+                bot,
                 chat_id=user_id,
                 text='{0} {1}\n\n{2}'.format(
-                    title_text, datetime.datetime.now().strftime('%H:%M'), replacements_from_site_message_text
+                    title_text, datetime.datetime.now().strftime('%H:%M'),
+                    replacements_from_site_message_text
                 )
             )
         )
     # обновимо інформацію для користувачів, хто коли отримав заміни і які саме
-    Replacements().update_last_time_send_replacements(2)
+    private_chat_tm.start()
+    # Replacements().update_last_time_send_replacements(2)
