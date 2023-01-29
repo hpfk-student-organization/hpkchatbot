@@ -12,6 +12,8 @@ dotenv_path = __NAME_DIR(__NAME_VENV_DIR)
 if os.path.exists(dotenv_path):
     load_dotenv(dotenv_path)
 
+DEBUG = os.environ.get('DEBUG')
+
 API_TOKEN = os.environ['API_TOKEN']  # Token aiogram bot
 
 DB_NAME = os.environ.get('DB_NAME', 'db_name')

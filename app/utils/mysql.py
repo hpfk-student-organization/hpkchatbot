@@ -554,7 +554,7 @@ class Replacements(BaseMysql):
         with self.connection.cursor() as cursor:
             sql = "UPDATE {0} INNER JOIN {1} USING(`user_id`) " \
                   "SET {0}.last_time_of_get=CURDATE(), {0}.last_send_method=%s " \
-                  "WHERE {1}.telegram_id IN (%s)"  # переписати запит
+                  "WHERE {1}.telegram_id IN %s"  # переписати запит
             cursor.execute(sql.format(self._table_replacements, self._table_users), (send_method, list_user))
             self.connection.commit()
 
@@ -665,6 +665,7 @@ class Replacements(BaseMysql):
     def clear_all_table_with_replacements(self):
         with self.connection.cursor() as cursor:
             sql = "TRUNCATE TABLE {0}"
+            #sql = "DELETE FROM {0}"
             cursor.execute(sql.format(self._table_for_table_replacements))
             cursor.execute(sql.format(self._table_for_info_replacements))
             cursor.execute(sql.format(self._table_for_news_replacements))
