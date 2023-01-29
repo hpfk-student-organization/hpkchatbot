@@ -201,4 +201,4 @@ async def send_new_replacements_for_sub(bot: aiogram.Bot, list_user_sub: List[in
         )
     # обновимо інформацію для користувачів, хто коли отримав заміни і які саме
     private_chat_tm.start()
-    # Replacements().update_last_time_send_replacements(2)
+    Replacements().update_last_time_send_replacements(2)
