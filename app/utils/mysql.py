@@ -665,7 +665,7 @@ class Replacements(BaseMysql):
     def clear_all_table_with_replacements(self):
         with self.connection.cursor() as cursor:
             sql = "TRUNCATE TABLE {0}"
-            sql = "DELETE FROM {0}"
+            #sql = "DELETE FROM {0}"
             cursor.execute(sql.format(self._table_for_table_replacements))
             cursor.execute(sql.format(self._table_for_info_replacements))
             cursor.execute(sql.format(self._table_for_news_replacements))
