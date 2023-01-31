@@ -1,6 +1,5 @@
 import asyncio
 
-from aiogram import exceptions
 
 from utils.module.tasking import TaskManager
 
