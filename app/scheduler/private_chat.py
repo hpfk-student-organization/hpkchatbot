@@ -1,5 +1,6 @@
 import asyncio
 
+
 from utils.module.tasking import TaskManager
 
 __MAX_INSTANCES = 29  # 29 message in 1 second
