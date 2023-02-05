@@ -62,7 +62,7 @@ class RedisGlobalStorage:
             values = await self.redis.get('{0}:{1}'.format(self.prefix, key))
             try:
                 return ast.literal_eval(values)
-            except ValueError:
+            except Exception:
                 return values
         return None
 
