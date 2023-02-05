@@ -22,7 +22,9 @@ async def on_startup():
 
     from scheduler.replacements import add_job, jobs_id
     await add_job(jobs_id[0], bot)
+    logger.info('Start scheduler...')
     scheduler.start()
+
     logger.debug('Starting process start to main commands for bots...')
     logger.info('Bot start - OK')
 
