@@ -305,14 +305,28 @@ class Users(BaseMysql):
     def update_info_user(
             self,
             telegram_id: Optional[int],
+            user_old_actions: Optional[str],
+            username: Optional[str]
+    ) -> Optional[None]:
+        with self.connection.cursor() as cursor:
+            sql = "UPDATE {0} SET username = %s, user_old_actions=%s  WHERE telegram_id = %s "
+
+            cursor.execute(
+                sql.format(self._table_users),
+                ( username, user_old_actions,telegram_id)
+            )
+            self.connection.commit()
+
+    def update_info_user_old(
+            self,
+            telegram_id: Optional[int],
             user_old_actions: Optional[str] = None,
             user_register: Optional[str] = None,
             username: Optional[str] = None,
             terms_of_user: Optional[bool] = None,
             user_admin: Optional[bool] = None,
 
-    ) -> Optional[None]:  # 2022-07-18 00:24:30.110611+03:00
-        # datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
+    ) -> Optional[None]:
         """
         UPDATE user in tables with all users in databases
 
