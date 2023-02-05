@@ -25,4 +25,3 @@ def is_ls_ft(parameter: Optional[Any]):
 
     """
     return type(parameter) in [list, set, frozenset, tuple]
-
