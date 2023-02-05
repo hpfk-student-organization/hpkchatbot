@@ -60,7 +60,6 @@ async def ads_button(message: types.Message, state: FSMContext):
     from handlers.users.message.lessons.parssing.schedule import read_excel
     import os
     # read_excel(os.path.join(config.PATH_TO_FILE_SCHEDULE, 'Розклад _ІІ семестр 2022_2023 н.р..xlsx'))
-    # read_excel(os.path.join(config.PATH_TO_FILE_SCHEDULE, 'file.xlsx'))
     await message.answer(
         text=menu_text
     )

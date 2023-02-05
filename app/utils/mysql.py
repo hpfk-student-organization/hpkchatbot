@@ -1054,8 +1054,7 @@ class AnonimChat(BaseMysql):
 
         """
         with self.connection.cursor() as cursor:
-            # дописати щоб
-            sql = "SELECT sex FROM {0} WHERE search_user_status=%s "
+            sql = "SELECT sex FROM {0} WHERE search_user_status=%s GROUP BY sex"
 
             cursor.execute(sql.format(self._table_anonim_users), (True,))
             tmp = _unpack_all_values_with_dict(cursor=cursor)

@@ -16,12 +16,18 @@ __MAX_INSTANCES = 1
 
 
 async def create_new_anonim_chat_with_two_user(_jobs_id, bot: aiogram.Bot, state: FSMContext):
+    print(AnonimChat().get_if_two_sex_user_in_queue())
     if AnonimChat().get_if_two_sex_user_in_queue():
         logger.debug(AnonimChat().get_all_telegram_id_in_queue(sex=False))
-        telegram_id_woman = list(AnonimChat().get_all_telegram_id_in_queue(sex=False))[-1]
-
         logger.debug(AnonimChat().get_all_telegram_id_in_queue(sex=True))
-        telegram_id_man = list(AnonimChat().get_all_telegram_id_in_queue(sex=True))[0]
+        telegram_id_woman = list(AnonimChat().get_all_telegram_id_in_queue(sex=False))
+        telegram_id_man = list(AnonimChat().get_all_telegram_id_in_queue(sex=True))
+        if not len(telegram_id_man) and len(telegram_id_man):
+            # якщо користувачів, різної статі відсутні
+            return
+
+        telegram_id_woman = telegram_id_woman[-1]
+        telegram_id_man = telegram_id_man[0]
 
         AnonimChat().update_connect_with(telegram_id=telegram_id_man, connect_with_telegram_id=telegram_id_woman)
         AnonimChat().update_connect_with(telegram_id=telegram_id_woman, connect_with_telegram_id=telegram_id_man)

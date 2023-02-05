@@ -16,10 +16,10 @@ from utils.mysql import AnonimChat
                 StateFilter(AnonymousChatStates.main_menu))
 async def search_user_to_talk(message: types.Message, state: FSMContext, bot: aiogram.Bot):
     """При переході в розділ lesson"""
-    await message.answer(
-        "🔧 Чат тимчасово не доступний"
-    )
-    return
+    # await message.answer(
+    #     "🔧 Чат тимчасово не доступний"
+    # )
+    # return
 
     if AnonimChat().get_sex_in_info_user(telegram_id=message.from_user.id) is None:
         message_text = "Щоб бот зміг з'єднати тебе з співрозмовником протилежної статі, варто спочатку вказати свою" \
