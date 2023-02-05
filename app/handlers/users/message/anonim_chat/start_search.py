@@ -66,7 +66,6 @@ async def who_in_queue_for_search_user_to_talk(message: types.Message):
     )
 
 
-
 @router.message(Text(text=AnonymousChatKb.cancel_search_btn),
                 StateFilter(AnonymousChatStates.search))
 async def cancel_search_new_user(message: types.Message, state: FSMContext):
