@@ -29,7 +29,7 @@ class AddNewUserMessageMiddleware(BaseMiddleware):
 
 async def update_information_about_user_in_databases(
         telegram_id: Optional[int | str],
-        username: Optional[str | None]
+        username: Optional[str]
 ):
     user_old_actions = user_register = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
 
