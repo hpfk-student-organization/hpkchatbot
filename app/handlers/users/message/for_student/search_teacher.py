@@ -115,6 +115,8 @@ async def get_information_of_teacher(query: CallbackQuery, teacher: str, **kwarg
                 group = result[day][key]['name_group']
                 lesson = result[day][key]['name']
                 room = result[day][key]['room']
+                if not room:
+                    room = 'Не вказано'
                 message_text += '{space}{num_lesson} ({time}): \t{group} \t«{lesson}...» \t<code>{room}</code>\n'.format(
                     space=4 * ' ',
                     num_lesson=num_lesson, time=time, group=group, lesson=lesson[:8], room=room
