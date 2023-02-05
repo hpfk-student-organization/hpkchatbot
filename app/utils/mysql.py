@@ -1180,7 +1180,7 @@ class AnonimChat(BaseMysql):
         """
         with self.connection.cursor() as cursor:
             sql = "SELECT COUNT(*) FROM {0} WHERE NOT {0}.search_user_status=%s"
-            cursor.execute(sql.format(self._table_anonim_users), (True,))
+            cursor.execute(sql.format(self._table_anonim_users), (False,))
             return _unpack_all_values_with_dict(cursor=cursor)[0]
 
     def add_one_message_to_all_message(
