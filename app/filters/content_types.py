@@ -1,13 +1,12 @@
 from abc import ABC
 from typing import Union, Optional
 
-from aiogram import types
+from aiogram import enums, types
 from aiogram.filters import BaseFilter
-from aiogram.types import ContentType
 
 
 class __ContentTypesBaseFilter(BaseFilter, ABC):
-    def __init__(self, content_types: Union[ContentType, list, tuple, set, frozenset]):
+    def __init__(self, content_types: Union[enums.ContentType, list, tuple, set, frozenset]):
         self.content_types = content_types
 
 
