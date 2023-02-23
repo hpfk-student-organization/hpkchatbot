@@ -5,7 +5,7 @@ on:
     branches: ["main"]
 env:
   IMAGE: ${{ secrets.DOCKER_HUB_LOGIN }}/${{ secrets.DOCKER_HUB_REPO }}
-  RELEASE_NAME: release- ${{ github.run_number }}
+  RELEASE_NAME: release-${{ github.run_number }}
 
 jobs:
   build-and-push:
