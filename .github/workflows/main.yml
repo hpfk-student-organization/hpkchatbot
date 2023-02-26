@@ -38,9 +38,7 @@ jobs:
 
       - name: Build status
         uses: ./.github/functions.yml
-        with:
-          job_status: ${{ job.status }}
-        id: notify
+        id: actions_status
 
   deploy:
     needs: [ build-and-push ]
@@ -78,6 +76,4 @@ jobs:
 
       - name: Deploy status
         uses: ./.github/functions.yml
-        with:
-          job_status: ${{ job.status }}
-        id: notify
+        id: actions_status
