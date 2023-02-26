@@ -2,7 +2,7 @@ name: Github CI/CD
 
 on:
   push:
-    branches: ["main"]
+    branches: [ "main" ]
 env:
   IMAGE: ${{ secrets.DOCKER_HUB_LOGIN }}/${{ secrets.DOCKER_HUB_REPO }}
   RELEASE_NAME: release-${{ github.run_number }}
@@ -36,7 +36,11 @@ jobs:
           docker push $IMAGE:latest
           docker push $IMAGE:$RELEASE_NAME 
 
-  update:
+      - name: Build status
+        uses: ./.github/functions.yml
+        id: actions_status
+
+  deploy:
     needs: [ build-and-push ]
     runs-on: ubuntu-latest
     
@@ -69,3 +73,7 @@ jobs:
         env:
           ANSIBLE_HOST_KEY_CHECKING: 'false'
           ANSIBLE_DEPRECATION_WARNINGS: 'false'
+
+      - name: Deploy status
+        uses: ./.github/functions.yml
+        id: actions_status
