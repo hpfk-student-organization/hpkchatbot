@@ -3,6 +3,7 @@ actions_status:
   if: ${{ failure() }}
   runs-on: ubuntu-latest
   steps:
+    - uses: actions/checkout@v3
     - name: Send Slack notification
       env:
         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
