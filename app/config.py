@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 # include venv-param
 __NAME_DIR = lambda path: os.path.join(os.path.dirname(__file__), *path.split('/'))
 
-__NAME_VENV_DIR = '.env'
+__NAME_VENV_DIR = '../.env'
 
 dotenv_path = __NAME_DIR(__NAME_VENV_DIR)
 if os.path.exists(dotenv_path):

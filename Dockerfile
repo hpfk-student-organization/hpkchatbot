@@ -1,8 +1,14 @@
 FROM python:3.10-slim
 
-WORKDIR /bot
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+WORKDIR /app/
+
+COPY requirements.txt requirements.txt
+RUN pip install --upgrade pip  && \
+    pip install -r requirements.txt && \
+    pip cache purge
+
+COPY script/docker-entrypoint.sh .
 COPY app .
 
-CMD ["python", "main.py"]
+RUN chmod +x /app/docker-entrypoint.sh
+ENTRYPOINT ["/app/docker-entrypoint.sh"]
