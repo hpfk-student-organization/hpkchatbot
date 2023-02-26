@@ -36,11 +36,14 @@ jobs:
           docker push $IMAGE:latest
           docker push $IMAGE:$RELEASE_NAME 
 
-      - name: Build status
-        uses: ./.github/functions.yml
+      - name: Send Slack notification of build
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+        uses: rtCamp/action-slack-notify@v2
         with:
-          job_status: ${{ job.status }}
-        id: notify
+          status: ${{ job.status }}
+          fields: repo,commit,author,event
+        id: slack
 
   deploy:
     needs: [ build-and-push ]
@@ -76,8 +79,11 @@ jobs:
           ANSIBLE_HOST_KEY_CHECKING: 'false'
           ANSIBLE_DEPRECATION_WARNINGS: 'false'
 
-      - name: Deploy status
-        uses: ./.github/functions.yml
+      - name: Send Slack notification of deploy
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+        uses: rtCamp/action-slack-notify@v2
         with:
-          job_status: ${{ job.status }}
-        id: notify
+          status: ${{ job.status }}
+          fields: repo,commit,author,event
+        id: slack
