@@ -1,32 +1,32 @@
-from aiogram.filters.state import StatesGroup as _StatesGroup, State as _State
+from aiogram.filters.state import StatesGroup, State 
 
 
-class LessonsStates(_StatesGroup):
-    main_menu = _State()
-    menu_settings = _State()
-    send_new_replacements = _State()
-    send_my_name_group = _State()
+class LessonsStates(StatesGroup):
+    main_menu = State()
+    menu_settings = State()
+    send_new_replacements = State()
+    send_my_name_group = State()
 
 
-class QuotesTeacherStates(_StatesGroup):
-    main_menu = _State()
-    view_quotes = _State()  # використовується тоді, коли користувач переглядає цитати
-    select_teacher = _State()
-    add_new_quotes = _State()
-    send_quotes = _State()
+class QuotesTeacherStates(StatesGroup):
+    main_menu = State()
+    view_quotes = State()  # використовується тоді, коли користувач переглядає цитати
+    select_teacher = State()
+    add_new_quotes = State()
+    send_quotes = State()
 
 
-class AnonymousChatStates(_StatesGroup):
-    main_menu = _State()
-    search = _State()
-    settings = _State()
-    chat_message = _State()
-    close_chat = _State()
+class AnonymousChatStates(StatesGroup):
+    main_menu = State()
+    search = State()
+    settings = State()
+    chat_message = State()
+    close_chat = State()
 
 
-class ForStudentsStates(_StatesGroup):
-    main_menu = _State()
+class ForStudentsStates(StatesGroup):
+    main_menu = State()
 
 
-class ADSStates(_StatesGroup):
-    main_menu = _State()
+class ADSStates(StatesGroup):
+    main_menu = State()
