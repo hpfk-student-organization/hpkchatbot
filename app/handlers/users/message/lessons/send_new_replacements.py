@@ -2,7 +2,7 @@ from loguru import logger
 from typing import List, Optional
 
 import aiogram
-from aiogram import types, F, enums
+from aiogram import types, F
 from aiogram.filters import StateFilter, Text
 from aiogram.fsm.context import FSMContext
 from aiogram.enums import ContentType

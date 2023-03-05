@@ -2,7 +2,6 @@ from loguru import logger
 
 from aiogram import types
 from aiogram.filters import StateFilter, Text
-from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery
 
 from keyboards.default import LessonsKb
@@ -16,7 +15,7 @@ from utils.mysql import Replacements
     Text(text=LessonsKb.how_get_replacements_btn),
     StateFilter(LessonsStates.menu_settings)
 )
-async def get_inl_kb_with_setting(message: types.Message, state: FSMContext):
+async def get_inl_kb_with_setting(message: types.Message):
     """Отримуємо кнопку із налаштуваннями"""
     message_text = 'В цьому пункті ти можеш обрати, яким чином ти плануєш отримувати заміни, або зовсім не отримувати'
     status, send_method = Replacements().get_subscription_status_and_send_method(telegram_id=message.from_user.id)

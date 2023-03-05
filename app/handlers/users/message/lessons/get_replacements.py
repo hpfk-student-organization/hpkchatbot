@@ -8,7 +8,6 @@ from loguru import logger
 from memoization import cached, CachingAlgorithmFlag
 
 import config
-from decorator.cache import cache
 from keyboards.default import LessonsKb, MainMenuKb
 from keyboards.inline.inline_keyboard import LessonsIKb, LessonsCBData
 from routers.private_chat.private_chat import router
