@@ -11,15 +11,14 @@ from keyboards.default import MainMenuKb, AnonymousChatKb
 from routers.private_chat.private_chat import router
 from states import LessonsStates, AnonymousChatStates
 from utils.mysql import Replacements, AnonimChat, Holy
-from utils.tools import remove_state
 
-__state_for_command = remove_state(AnonymousChatStates.search, LessonsStates.send_my_name_group)
+__state_for_command = AnonymousChatStates.search, LessonsStates.send_my_name_group
 
 
 @router.message(
     CommandStart(),
     F.from_user.func(lambda from_user: not AnonimChat().is_check_exist_with_connect(telegram_id=from_user.id)),
-    StateFilter(*__state_for_command)
+    ~StateFilter(*__state_for_command)
 )
 async def commands_start_private(message: types.Message, state: FSMContext):
     AnonimChat().update_queue_status(telegram_id=message.from_user.id, status=False)
@@ -84,7 +83,7 @@ async def commands_show_private(message: types.Message):
 
 @router.message(
     Command(commands='setting_replacements'),
-    StateFilter(*__state_for_command)
+    ~StateFilter(*__state_for_command)
 )
 async def commands_edit_my_group_of_replacements(message: types.Message, state: FSMContext):
     from handlers.users.message.lessons.setting_name_group import open_menu_for_edit_name_group
@@ -103,7 +102,7 @@ async def __remove_old_task(task: asyncio.create_task, telegram_id: int):
 
 @router.message(
     Command(commands='menu'),
-    StateFilter(*__state_for_command)
+    ~StateFilter(*__state_for_command)
 )
 async def command_main_menu(message: types.Message, state: FSMContext):
     """ Головна функція головного меню """
@@ -122,7 +121,7 @@ async def command_main_menu(message: types.Message, state: FSMContext):
 
 @router.message(
     Command(commands='menu'),
-    StateFilter(*__state_for_command)
+    ~StateFilter(*__state_for_command)
 )
 async def command_help(message: types.Message):
     """

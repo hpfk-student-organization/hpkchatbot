@@ -1,53 +1,8 @@
 import hashlib
-import inspect
+
 from loguru import logger
 import os
-import sys
 from typing import Optional, List
-
-from aiogram.fsm.state import StatesGroup, State
-
-
-def remove_state(*args, states_group: Optional = None) -> Optional[set | list | str]:
-    """
-    Видаляє передані State або StatesGroup
-
-    Args:
-        *args: State або StateGroup, які потрібно видалити
-        states_group: З якої StatesGroup потрібно виключити State
-
-    Returns:
-        None
-    """
-    if not isinstance(states_group, (list, tuple, set, frozenset)) and not type(states_group) == type(
-            StatesGroup) and states_group is not None:
-        raise TypeError("unsupported type(s). StateGroup is expected")
-
-    if not args and not states_group:
-        return '*'
-
-    #  якщо ми передали StateGroup то запакуємо в set()
-    if type(states_group) == type(StatesGroup):
-        states_group = {states_group}
-
-    if isinstance(states_group, (list, tuple, frozenset)):
-        states_group = {state for state in states_group}
-
-    # отримуємо state
-    set_state = {state for state in args if isinstance(state, State)}
-    # state_group - які ми передали з тих, які потрібно видалити
-    set_state_group = set(args) - set_state
-    if states_group:
-        # видалимо state_group які ми передали
-        list_state_group = states_group - set_state_group
-    else:
-        # Збираємо усі state_group окрім {State, StatesGroup} | set_state_group
-        list_state_group = {
-            cls_obj for cls_name, cls_obj in inspect.getmembers(sys.modules['states.default_state'])
-            if inspect.isclass(cls_obj) and cls_obj not in {State, StatesGroup} | set_state_group
-        }
-    # отримуємо тепер state із list_state_group окрім set_state
-    return [state for state_group in list_state_group for state in state_group if state not in set_state] + [None]
 
 
 def sort(lst: Optional[list | tuple | set | frozenset],
@@ -75,35 +30,6 @@ def remove_duplicate(lst: Optional[list | tuple | set | frozenset]):
     """Видаляємо дублікати зі списку"""
     seen = {}
     return [seen.setdefault(x, x) for x in lst if x not in seen]
-
-
-def convert_text_to_markdown_(text: Optional[str]) -> Optional[str]:
-    """Конвертуємо звичайний текст у формат стилю markdown за всіма нормами"""
-    specific_characters = {'_', '*', '[', ']', '(', ')', '~', '`', '>', '#', '+', '-', '=', '|', '{', '}', '.', '!'}
-
-    for character in specific_characters:
-        text = text.replace(character, '\\' + character)
-
-    return text
-
-
-def unpacked(lst: Optional[list]):
-    """
-        Unpacks a multi-level list into a 1-level list
-
-    Args:
-        lst: Multi-level list
-
-    Returns:
-        1-level list
-
-    """
-    while lst:
-        sublist = lst.pop(0)
-        if isinstance(sublist, list):
-            lst = sublist + lst
-        else:
-            yield sublist
 
 
 def get_dir_hash(path_to_dir: Optional[str]) -> Optional[str]:
